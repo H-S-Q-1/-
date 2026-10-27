@@ -1,0 +1,4529 @@
+# C语言笔记
+
+###  一、编程练习
+
+---
+
+#### 1.给定条件的整数集6.1.1
+
+**给定==不超过6==的正整数A，考虑从A开始的==连续4个数字==。请输出所有由它们组成的==无重复数字==的3位数。**
+
+输入格式：
+输入在一行中给出A。
+
+输出格式：
+**输出满足条件的的3位数，要求从小到大，每行6个整数。整数间以空格分隔，但行末不能有多余空格。**
+
+输入样例：
+2
+
+输出样例：
+234 235 243 245 253 254
+324 325 342 345 352 354
+423 425 432 435 452 453
+523 524 532 534 542 543
+
+**代码:**
+
+```c
+#include <stdio.h>
+int main()
+{
+    int i,j,k;
+    int n;
+    scanf("%d",&n);
+    i=n;
+    int cnt=0;
+    while(i<=n+3){
+        j=n;
+        while(j<=n+3){
+            k=n;
+            while(k<=n+3){ 
+                if(i!=j&&i!=k&&j!=k){
+            		cnt++;
+                    printf("%d%d%d",i,j,k);  
+                    if(cnt==6){
+                    	printf("\n");
+                    	cnt=0;}
+                    else printf(" ");					
+                } k++;
+            }j++;             
+        }i++;
+     }
+    return 0;
+}
+```
+
+
+
+#### 2.水仙花数6.1.2
+
+**水仙花数是指一个N位正整数(N>=3)，==它的每个位上的数字的N次幂之和等于它本身==。例如:153=1^3^+ 5^3^ + 3^3^。本题要求编写程序计算所有N位水仙花数。**
+
+输入格式:
+输入在一行中给出一个正整数N(3<=N<=7)。
+输出格式:
+按递增顺序输出所有N位水仙花数，每个数字占一行。
+输入样例:
+3
+输出样例:
+153
+370
+371
+
+**代码:**
+
+```c
+#include <stdio.h>
+int main()
+{
+    int n;//引入正整数的位数
+    scanf("%d",&n);
+    int first=1;
+    int i=1;
+    while(i<n)//走n-1遍循环从1-(n-1)
+    {
+        first*=10;
+        i++;
+    }
+    //用printf("first=%d\n",first);可以检查通过这个循环是否可以得到我们要的那个first
+    i=first;
+    while(i<first*10)
+    {
+        int t=i;//临时的变量去记录i
+        int sum=0;//用sum记录每一位的n次幂的结果
+        do{
+            int d=t%10;//每一轮取t的个位
+            t/=10;
+            int p=1;//用来表示幂次的结果
+            int j=0;//用来计数的变量
+            while(j<n)//循环进行n次从0-(n-1) 
+            {
+                p*=d;
+                j++;                
+            }//这里可以写printf("%d",p);来检查p是否等于d的n次幂 
+            sum+=p;
+        }while(t>0);
+        if(sum==i){
+            printf("%d\n",i);
+        }
+        i++;
+    }                                                             
+    return 0;
+}
+```
+
+
+
+#### 3.九九乘法表6.1.3
+
+**本题要求对任意给定的1位正整数N，输出从1\*1到N*N的部分口诀表。**
+
+输入格式：
+输入在一行中给出一个正整数N（1<=N<=9）。
+
+输出格式：
+输出==下三角==N*N部分口诀表，其中==等号右边数字占4位、左对齐==。
+
+**代码:**
+
+```c
+#include <stdio.h>
+int main()
+{	
+	int n;
+	scanf("%d",&n);
+	int i,j;
+	i=1;
+	while(i<=n)
+	{
+		j=1;
+		while(j<=i)
+		{	
+        	printf("%d*%d=%d",j,i,i*j);//注意i和j的位置，如果弄反了，则九九乘法表会反过来
+			if(i*j<10){
+				printf("   ");	//三个空格
+			}
+			else{
+				printf("  ");//两个空格
+			}
+			j++;
+		}
+		printf("\n");
+		i++;
+	}
+	return 0;
+ } 
+```
+
+
+
+#### 4.统计素数求和6.1.4
+
+**本题要求统计给定整数M和N区间内素数的个数并对它们求和。**
+
+输入格式：
+输入在一行中给出2个正整数M和N（1<=M<=N<=500）。
+
+输出格式：
+在一行中顺序输出M和N区间内==素数的个数以及它们的和==，数字间以空格分隔。
+
+输入样例：
+10 31  (10-31的素数为11，13，17，19，23，29，31)
+
+输出样例：
+7 143
+
+**代码:**
+
+```c
+#include <stdio.h>
+int main()
+{
+	int m,n;
+	scanf("%d %d",&m,&n);
+	int i;
+	int cnt=0;
+	int sum=0;
+	if(m==1){
+		m=2;//避免出现1也是素数的情况 
+	}
+	for(i=m;i<=n;i++)
+	{	//判断i是不是素数 
+		int isPrime=1;
+		int k;
+		for(k=2;k<i;k++){
+			if(i%k==0){
+				isPrime=0;
+				break;//跳出嵌套的这个for循环 
+			}
+		}
+		if(isPrime){
+			cnt++;
+			sum+=i; 			
+		}
+	}
+	printf("%d %d\n",cnt,sum);
+	return 0;
+}
+```
+
+
+
+#### 5.猜数游戏6.1.5
+
+**猜数字游戏是令系统随机产生一个100以内的正整数，用户输入一个数对其进行猜测，需要你编写程序自动对其与随机产生的被猜数进行比较，并提示大了（"Too big"），还是小了（"Too small"），相等表示猜到了。如果猜到，则结束程序。**
+
+一次猜出该数，提示"Bingo!"；如果3次以内猜到该数，则提示"Lucky You!"；如果超过3次==但是在N（>3）==次提示"Good Guess!"；如果超过N次都没有猜到，则提示"Game Over"，并结束程序。如果在到达N次之前，==用户输入了一个负数，也输出"Game Over"==，并结束程序。
+
+ 输入格式： 输入第一行中给出2个不超过100的正整数，分别是系统产生的随机数、以及猜测的最大次数N。随后每行给出一个用户的输入，直到出现负数为止。
+
+ 输出格式： 在一行中输出每次猜测相应的结果，直到输出猜对的结果或"Game Over"则结束。
+
+==需说明的是:该猜数游戏与4.2.2的猜数不同，6.1.5是人输入一个数让计算机去猜，而4.2.2是计算机随机生成一个数让人去猜==
+
+**代码1**:(该代码是人输入一个数和猜的次数限制，然后人去输入)
+
+```c
+#include <stdio.h>
+int main()
+{
+	int number,n;
+	int inp;
+	int finished=0;
+	int cnt=0;
+	scanf("%d %d",&number,&n);
+	do{
+		scanf("%d",&inp);
+		cnt++;
+		if(inp<0){
+			printf("Game Over\n");
+			finished=1;//finished来控制循环要不要退出 
+		}else if(inp>number){
+			printf("Too big\n");
+		}else if(inp<number){
+			printf("Too small\n");
+		}else{
+			if(cnt==1){
+				printf("Bingo!\n");
+			}else if(cnt<=3){
+				printf("Lucky You\n");
+			}else{
+				printf("Good Guess\n");
+			}
+			finished=1;
+		}
+		if(cnt==n){
+			if(!finished){
+				printf("Game Over\n");
+				finished=1;
+			}
+		}
+	}while(!finished);
+	return 0;	
+} 
+```
+
+
+
+**代码2**:(该代码是人输入一个数和猜的次数，让计算机去猜，==**不过概率很小**==)
+
+```c
+#include <stdio.h>
+#include <stdlib.h>//srand()和rand()所在的头文件
+#include <time.h>//time()所在的头文件
+int main()
+{
+	int number,n;
+	int inp;
+	int finished=0;
+	int cnt=0;
+	srand(time(0));//srand()设计随机数种子。time(0)返回的是当前，单位是秒
+	do{
+		inp=rand()%100+1;//生成随机数
+		printf("%d",inp);
+		cnt++;
+		if(inp<0){
+			printf("Game Over\n");
+			finished=1;//finished来控制循环要不要退出 
+		}else if(inp>number){
+			printf("Too big\n");
+		}else if(inp<number){
+			printf("Too small\n");
+		}else{
+			if(cnt==1){
+				printf("Bingo!\n");
+			}else if(cnt<=3){
+				printf("Lucky You\n");
+			}else{
+				printf("Good Guess\n");
+			}
+			finished=1;
+		}
+		if(cnt==n){
+			if(!finished){
+				printf("Game Over\n");
+				finished=1;
+			}
+		}
+	}while(!finished);
+	return 0;	
+} 
+```
+
+==需注意的是srand(time(0))需放在循环外面，否则是产生的随机数序列是完全一样的==
+
+
+
+#### 6.求序列前N项和6.1.6
+
+本题要求编写程序,计算序列==**2/1+3/2+5/3+8/5+...**== 的前N项之和。注意该序列**从第2项起，每一项的分子是前一项分子与分母的和，分母是前一项的分子。**
+
+输入格式：
+
+输入在一行中给出一个正整数N。
+
+输出格式：
+
+在一行中输出部分和的值，精确到小数点后2位。题目保证计算结果==**不超过双精度范围**==(**“不超过双精度范围” = 结果不会超出 `double` 能表示的大小**)。
+
+输入样例：
+
+20
+
+输出样例：
+
+32.66
+
+**代码:**
+
+```c
+#include <stdio.h>
+int main()
+{
+	double i=1;
+	double j=2;
+	int N;
+	scanf("%d",&N);
+	int cnt=1;
+	double sum=0.0;
+	for(;cnt<=N;cnt++)
+	{
+		double t=j/i;
+		sum+=t;
+		double m=j;
+		j=j+i;
+		i=m;
+	}
+	printf("%.2f\n",sum);
+	return 0;
+ } 
+```
+
+#### 7.约分最简分式6.1.7
+
+**分数可以表示为“分子/分母”的形式。编写一个程序，要求用户输入一个分数，然后将其约分为最简分式。**
+
+**最简分式是指分子和分母不具有可以约分的成分了。**如6/12可以被约分为1/2。**当分子大于分母时，不需要表达为整数又分数的形式，即11/8还是11/8；而当分子分母相等时，仍然表达为1/1的分数形式。**
+
+**==相当于求出两数的最大公约数(利用辗转相除法)==**
+
+输入格式：
+
+输入在一行中给出一个分数，分子和分母中间以斜杠“/”分隔，如：12/34 表示34分之12。分子和分母都是正整数（不包含0，如果不清楚正整数的定义的话）。
+
+提示：在scanf的格式字符串中加入“/”，让scanf来处理这个斜杠。
+
+输出格式：
+
+在一行中输出这个分数对应的最简分式，格式与输入的相同，即采用“分子/分母”的形式表示分数。如 5/6表示6分之5。
+
+输入样例：
+
+60/120
+
+输出样例：
+
+1/2
+
+**代码**:
+
+```c
+#include <stdio.h>
+int main()
+{
+	int a;
+	int b;
+	scanf("%d/%d",&a,&b);
+	int i;
+	int j;
+	i=a;
+	j=b;
+	while(b!=0){
+		int t=a%b;
+		a=b;
+		b=t;
+	}//利用while循环来实现找到最大公约数的目的，a就是i与j的最大公约数
+	printf("%d/%d",i/a,j/a);
+	return 0;
+ } 
+```
+
+#### 8.其余的一些题
+
+**1.输入一个整数，输出每个数字对应的拼音。当整数为负数时，先输出“fu”字。十个数字对应的拼音如下**：
+
+0: ling
+1: yi
+2: er
+3: san 
+4: si
+5: wu 
+6: liu
+7: qi 
+8: ba 
+9: jiu
+
+输入格式：
+输入在一行中给出一个整数，如：1234。
+提示：整数包括负数、零和正数。
+
+输出格式：
+在一行中输出这个整数对应的拼音，每个数字的拼音之间用空格分开，行末没有最后的空格。如 yi er san si。
+
+输入样例：
+-600
+
+输出样例：
+fu liu ling ling
+
+**代码：**
+
+```
+#include <stdio.h>
+int main()
+{
+	int x;
+	scanf("%d",&x);
+	if(x<0){
+		printf("fu "); 
+		x=-x;
+	}
+	int mask=1;
+	int t=x;
+	while(x>9){
+		x/=10;
+		mask*=10;
+	}
+	do{
+		int d=t / mask;
+		switch(d){
+			case 0:printf("ling");break;
+			case 1:printf("yi");break;
+			case 2:printf("er");break;
+			case 3:printf("san");break;
+			case 4:printf("si");break;
+			case 5:printf("wu");break;
+			case 6:printf("liu");break;
+			case 7:printf("qi");break;
+			case 8:printf("ba");break;
+			case 9:printf("jiu");break;
+		}
+		if(mask>9) printf(" ");
+		t%=mask;
+		mask/=10;
+	}while(mask>0);
+	return 0;
+}
+```
+
+
+
+**2).求a的连续和**
+
+**输入两个整数a和n，a的范围是[0,9]，n的范围是[1,8]，求数列之和S = a+aa+aaa+...+aaa...a（n个a）。 如a为2、n为8时输出的是2+22+222+...+22222222的和。**
+
+输入格式：
+
+输入在一行中给出两个整数，先后表示a和n。
+
+输出格式：
+
+在一行中输出要求的数列之和。
+
+输入样例：
+
+2 4
+
+输出样例：
+
+2468
+
+**代码:**
+
+```
+#include <stdio.h>
+int main()
+{
+	int a,n;
+	scanf("%d %d",&a,&n);
+	int sum;
+	if(a>=0&&a<=9&&n>=1&&n<=8){
+		for(;n>=1;n--){
+			sum+=a;
+			a=a*10+2;
+		}
+		printf("%d",sum); 
+	}
+	else{printf("请输入正确的a和n");
+	}
+}
+```
+
+### 二、数据类型基础
+
+---
+
+#### **1.数据类型概述6.2.1**
+
++ C语言的变量必须在使用前定义，并且确定类型。
+	比如: `a=5 `   没有规定a的类型会导致报错
++ C以后语言向两个方向发展:
+	1. C++/Java更强调类型，对类型的检查更严格
+	2. JavaScript、Python、PHP 不看重类型，甚至不需要事先定义
++ 类型安全:
+	1. 支持强类型的观点认为明确的类型有助于尽早发现程序中的简单错误
+	2. 反对强类型的观点认为过于强调类型迫使程序员面对底层、实现而非事务逻辑
+	3. 总的来说，早期语言强调类型，面向底层的语言强调类型
+	4. C语言需要类型，但是对类型的安全检查并不足够
+
++ ==**C语言的类型:**==
+
+	1. 整数:
+
+		char、short、int、long、long long( C99类型 )
+
+	2. 浮点数:
+
+		float、double、long double( C99类型 )
+
+	3. 逻辑:
+
+		bool ( C99类型 )
+
+	4. 指针
+
+	5. 自定义类型
+
++ ==**类型有何不同:**==
+	1. 类型名称:int、long、double
+	2. 输入输出时的格式化:%d、%ld(long int)、%lf
+	3. 所表达的数的范围:char<short<int<float<double
+	4. 内存中所占据的大小:1个字节到16个字节
+	5. 内存中的表达形式:二进制数(补码)、编码
+
++ ==**sizeof**==
+
+	1. 是一个运算符，给出某个类型或变量在内存中所占据的字节数
+
+	2. sizeof(int)
+
+	3. sizeof(i)
+
+	4. ==**sizeof(void*)也可以算指针的大小**==
+
+	5. 例如：
+	
+	  ```c
+	  #include <stdio.h>
+	  int main()
+	  {
+	  	int a;
+	  	a=6;
+	  	printf("sizeof(long double)=%zu\n",sizeof(long double));//lomg double是16个字节
+	  	printf("sizeof(a)=%zu\n",sizeof(a));//int类型的a是4个字节
+	  	return 0;
+	  }
+	  ```
+
+	6. 是静态运算符，它的结果在编译时刻就决定了
+
+	  把上面的代码`sizeof(a)`换成`sizeof(a++)`最后输出a还是等于6
+
+	  如果换成`sizeof(a+1.0)`最后输出的结果是8，因为a被转换成了浮点型(double类型)
+	
+	7. 不要在sizeof的括号里做运算，这些运算不会做的
+
+#### 2.整数类型（6.2.2~6.2.6）
+
++ **整数**：
+
+	1. char：一字节（8比特）
+
+	2. short：(2字节)
+
+	3. int:取决于编译器（CPU），通常的意义是“一个字‘
+
+	4. long:取决于编译器（CPU），通常的意义是”一个字“（4或8个字节）
+
+		| 平台                | 机器字长 | `sizeof(int)` | `sizeof(long)` | `sizeof(void*)` |
+		| :------------------ | :------- | :------------ | :------------- | :-------------- |
+		| 16 位 DOS           | 2 字节   | 2             | 4              | 2               |
+		| 32 位 Linux/Windows | 4 字节   | 4             | 4              | 4               |
+		| 64 位 Linux/macOS   | 8 字节   | 4             | 8              | 8               |
+		| 64 位 Windows       | 8 字节   | 4             | 4              | 8               |
+
+	5. long long：8字节
+
+	6. **代码：**
+
+		```c
+		#include <stdio.h>
+		int main()
+		{
+			printf("sizeof(char)=%ld\n",sizeof(char));
+			printf("sizeof(short)=%ld\n",sizeof(short));
+			printf("sizeof(int)=%ld\n",sizeof(int));
+			printf("sizeof(long)=%ld\n",sizeof(long));
+			printf("sizeof(long long)=%ld\n",sizeof(long long));
+			return 0;
+		 } 
+		```
+
++ ##### 整数的内部表达
+
+	1. ==**计算机内部一切都是二进制**==
+
+		+ 18&rarr;00010010
+		+ 0&rarr;00000000
+		+ -18&rarr;？
+
+	2. 如何表示负数
+
+		+ 十进制用”-“来表示负数，在做计算的时候
+
+	3. 二进制负数：
+
+		+ 仿照十进制，有一种特殊的标志表示负数
+
+		+ 取中间的数为0，如1000000表示0，比它小的是负数，比它大的是正数
+
+		+ 补码
+
+			**==补码的意义就是拿补码和原码可以加出一个溢出的零==**
+
+			**补码不改变位，只改变解释规则。**
+			**255 和 -1 是同一个位模式在“无符号”和“有符号补码”下的两种读法。**
+
+			因为0 - 1&rarr;-1,所以-1 = (1)0000 0000 - 0000 0001 &rarr;1111 1111
+
+			​      1111 1111被当作纯二进制看待时，是255，被当作补码看待时是-1
+
+			​      同理，对于-a，其补码就是0-a，实际是2^n^-a，n是这种类型的位数
+
++ **整数的范围：**
+
+	1. 对于一个字节(8位)，可以表达的是：0000 0000 &rarr;1111 1111
+
+		其中0000 0000&rarr;0  、1111 1111至1000 0000 &rarr;–1至–128  、 0000 0001至0111 1111&rarr;1至127
+
+	2. **代码：**
+
+		```c
+		#include <stdio.h>
+		int main()
+		{
+			char c=255;
+			int i=255;
+			printf("c=%d,i=%d",c,i);
+			//c是11111111
+			//i是00000000 00000000 00000000 11111111
+			return 0;
+		 } 
+		```
+
+	3. char: 1字节：-128~127
+
+		short: 2字节：-32768~-32767
+
+		int: -2^32-1^ ~ 2^32-1^ – 1
+
++ **unsigned:**
+
+	1. 如果一个字面量常数想要表达自己是unsigned,可以在后面加u或则U ，比如：255U
+
+	2. 用l或则L表示long(long)
+
+	3. *unsigned的初衷并非扩展数能表达的范围，而是==**为了做纯二进制运算，主要是为了移位**==
+
+	4. **代码1：**(127+1=–128)
+
+		```c
+		#include <stdio.h>
+		int main()
+		{
+			char c=127;
+			c+=1;
+			printf("%d\n",c);
+			return 0;
+		 } //最终输出的c=-128
+		```
+
+		代码2：（-128-1=127）
+
+		```c
+		#include <stdio.h>
+		int main()
+		{
+			char c=-128;
+			c-=1;
+			printf("%d\n",c);
+			return 0;
+		} //最终输出的c=127
+		```
+
+		<img src="../../Pictures/Saved Pictures/编程所需图片.jpg" style="zoom: 25%;" align="left"/>
+
++ **整数的输入输出**
+
+	+ 只有两种形式：int或long long
+
+		1. %d: int
+		2. %u: unsigned
+		3. %ld: long long
+		4. %lu: unsigned long long
+
+	+ 8进制和16进制
+
+		+ 一个以0开头的数字字面量是8进制
+
+		`int i=012;`用%d输出的i是10，用%o输出的i是12
+
+		+ 一个以0x开头的数字字面量是16进制
+
+		`int c=0x12;`用%d输出的i是10，用%x输出的i是12
+
++ **选择整数类型**
+
+	+ 为什么整数要有那么多种？
+
+		为了准确表达内存，做底层程序的需要
+
+	+ **==没有特殊需要，就选int==**
+
+	+ unsigned与否只是输出的不同，内部计算是一样的		
+
+#### 3.浮点类型（6.2.7~6.2.8）
+
++ | 类型       | 字长 | 范围                                      | 有效数字 | `scanf` 格式 | `printf` 格式 |
+	| :--------- | :--- | :---------------------------------------- | :------- | :----------- | :------------ |
+	| **float**  | 32   | ±(1.20×10⁻³⁸ ~ 3.40×10³⁸)， 0, ±inf, nan  | 7        | `%f`         | `%f`, `%e`    |
+	| **double** | 64   | ±(2.2×10⁻³⁰⁸ ~ 1.79×10³⁰⁸)， 0, ±inf, nan | 15       | `%lf`        | `%f`, `%e`    |
+
+	+ `%e`是用科学计数法来表示一个数
+
+<img src="../../Pictures/Saved Pictures/36A3396EAC5B575ECFDD3D1EE2208EA2.jpg" style="zoom: 50%;" />
+
++ **输出精度：**
+
+	+ 在%和f之间加上.n可以指定输出小数点后几位，这样的输出是做四舍五入的
+	+ 因为计算机的位数不是无限的，基于科学计数法表示的浮点数精度有限，没办法表达所有实数
+	+ 例如：`printf("%.20f",0.0049)`输出的结果不会是0.00490000000000000000而是0.00489999999999999980
+
++ **浮点的范围与精度:**
+
+	+ printf输出inf表示不超过范围的浮点数：$\pm$$\infty$
+
+	+ printf输出nan表示不存在的浮点数
+
+	+ ```c
+		#include <stdio.h>
+		int main()
+		{
+			printf("%f\n",12.0/0.0);//inf
+			printf("%f\n",-12.0/0.0);//-inf
+			printf("%f\n",0.0/0.0);//nan
+			return 0;
+		 } 
+		```
+
+	+ **浮点运算的精度：**
+
+		```c
+		#include <stdio.h>
+		int main()
+		{
+			float a,b,c;
+			a=1.345f;
+			b=1.123f;
+			c=a+b;
+			if(c==2.468)
+				printf("相等\n");
+			else
+				printf("不相等！c=%.10f,或%f\n",c,c);
+			return 0;
+		 } 
+		```
+
+		​     最终输出的结果是：不相等！c=2.4679999352,或2.468000
+
+	+ **==带小数点的字面量是double而非float（float需要用f或者F后缀来表示身份）==**
+	+ 浮点数在计算时是由专用的硬件部件实现的
+	+ 计算double和float所用的部件是一样的
+
++ **选择浮点类型：**
+	+ **==如果没有特殊需要就用double==**
+
+#### 4.字符类型（6.2.9~6.2.10）
+
++ **char：**
+
+  1. 是一种整数，也是一种特殊的类型：字符。
+
+  2. 用单引号表示的字符字面量：‘a’,’1’
+
+  3. “也是一个字符
+
+  	```c
+  	#include <stdio.h>
+  	int main()
+  	{
+  		char ch;
+  		ch=getchar();
+  		
+  		printf("%c\n",ch);
+  		return 0;
+  		
+  	}输入"得到"
+  	```
+
+  	
+
+  4. printf和scanf里用%c来输入输出字符
+
+    ```c
+    #include <stdio.h>
+    int main()
+    {
+    	char c;
+    	c=49;
+    	printf("c=%d\n",c);//c=49
+    	printf("c=%c\n",c);//c='1'
+     } 
+    ```
+
++ **混合输入**
+
+	scanf(“%d %c”,&i,&c);与scanf(“%d%c”,&i,&c);是不一样的
+
+	```c
+	#include <stdio.h>
+	int main()
+	{
+		int i;
+		char c;
+		scanf("%d %c",&i,&c);//输入12 1
+		printf("i=%d,c=%d,c='%c'",i,c,c);//输出12 49 '1'
+	 } 
+	```
+
++ **字符计算**
+	
+	1. 一个字符加一个数字得到ASCll码表中那个数之后的字符
+	2. 两个字符的减，得到它们在表中的距离
+	
++ **大小写转换：**
+
+	1. 字母在ASCll表中是顺序排列的
+
+	2. 大写字母和小写字母是分开排列的，并不在一起
+
+	3. ‘a’-‘A’可以得到两段之间的距离，于是：
+
+		+ ch+‘a’-‘A’可以把一个大写字母变成小写字母
+
+			```c
+			#include <stdio.h>
+			int main()
+			{
+			    char ch;
+			    char c;
+			    scanf("%c", &c);
+			    // 判断是不是大写字母
+			    if (c >= 'A' && c <= 'Z') {
+			        ch = c + 'a' - 'A';  // 大写转小写
+			    } else {
+			        ch = c; // 如果不是大写字母，原样输出
+			    }
+			
+			    printf("%c", ch);
+			    return 0;
+			}
+			```
+
+		+ ch+‘A’-‘a’可以把一个小写字母变成大写字母
+
+			```c
+			#include <stdio.h>
+			int main()
+			{
+			    char ch;
+			    char c;
+			    scanf("%c", &c); 
+			    // 判断是不是小写字母
+			    if (c >= 'a' && c <= 'z') {
+			        ch = c + 'A' - 'a';
+			    } else {
+			        ch = c; // 如果输入的不是小写字母，原样输出
+			    }
+			    printf("%c", ch);
+			    return 0; 
+			```
+
+			或则利用C语言标准库 `<ctype.h>` 中的**toupper(小写转大写)**
+
+			**tolower是大写转小写**
+			
+			```c
+			#include <stdio.h>
+			#include <ctype.h> // 引入 toupper 的头文件
+			
+			int main()
+			{
+			    char c;
+			    scanf("%c", &c);
+			    printf("%c", toupper(c)); // toupper 自动帮你处理小写转大写
+			    return 0;
+			}
+			```
+
+
++ **逃逸字符：**
+
+	1. 用来表示无法印出来的控制字符或特殊字符，它由一个反斜杠”\“开头，后面跟上另一个字符，这两个字符合起来，组成了一个字符
+
+		
+
+	2. | 字符 | 意义           | 字符 | 意义       |
+		| :--- | :------------- | :--- | :--------- |
+		| `\b` | 回退一格       | `\"` | 双引号     |
+		| `\t` | 到下一个表格位 | `\'` | 单引号     |
+		| `\n` | 换行           | `\\` | 反斜杠本身 |
+		| `\r` | 回车           |      |            |
+	
+	+ 对\r的理解（在同一行进行，光标回到当前行的开头，若后面还有其他的字符会覆盖\r前面部分的字符）
+	
+	+ 例如：（\r）
+	
+		```c
+		#include <stdio.h>
+		int main()
+		{
+			printf("123\r321");
+			return 0;
+		}
+		//321
+		```
+	
+		
+
+#### **5.类型转换6.2.11**
+
++ **自动类型转换：**
+
+	1. 当运算符的两边出现不一致的类型时，会自动转换成较大的类型（大的意思是能表达的数的范围更大）
+
+	2. char&rarr;short&rarr;int&rarr;long&rarr;long long
+
+	3. int&rarr;float&rarr;double
+
+		对于printf,任何小于int的类型会被转换成int；float会被转换成double
+
+		但是scanf不会，要输入short，需要%hd
+
++ **强制类型转换：**
+
+	1. 需把一个变量强制转换成另一个类型（通常是较小的类型）
+	2. 需要：（类型）值。比如：（int）10.2
+	3. ==只是从那个变量计算出了一个新的类型的值，它并不改变那个变量，无论是值还是类型都不改变==
+	4. 强制类型转换的优先级高于四则运算
+
+### 三、逻辑与运算符
+
+#### 1.逻辑类型与运算（6.3.1~6.3.2）
+
++ **逻辑类型：**
+
+	1. bool类型
+		+ 使用前需要使用`#include <stdbool.h>`
+		+ 引入头文件后就可以使用bool和true、false
+
++ **逻辑运算：**
+
+	* 逻辑运算是对逻辑量进行的运算，结果只有0或1
+	* 逻辑量是关系运算或逻辑运算的结果
+
+	| 运算符 | 描述   | 示例     | 结果                                                         |
+	| :----- | :----- | :------- | :----------------------------------------------------------- |
+	| !      | 逻辑非 | !a       | 如果a是true结果就是false，如果a是false结果就是true           |
+	| &&     | 逻辑与 | a && b   | 如果a和b都是true，结果就是true；否则就是false                |
+	| \|\|   | 逻辑或 | a \|\| b | 如果a和b有一个是true，结果为true；两个都是false，结果为false |
+
+	+ **想表达x∈（4，6）应该为x>4&&x<6**
+
+	+ **想判断一个字符c是否是大写字母：c>=‘A’&&c<=‘Z’**
+
+	+ **优先级！>&&>||**
+
+		
+
+	+ | 优先级 | 运算符                  | 结合性                 |
+		| :----- | :---------------------- | :--------------------- |
+		| 1      | ()                      | 从左到右               |
+		| 2      | ! + - ++(自增) --(自减) | 从右到左（单目的+和-） |
+		| 3      | * / %                   | 从左到右               |
+		| 4      | + -                     | 从左到右               |
+		| 5      | < <= > >=               | 从左到右               |
+		| 6      | == !=                   | 从左到右               |
+		| 7      | &&                      | 从左到右               |
+		| 8      | \|\|                    | 从左到右               |
+		| 9      | = += -= *= /= %=        | 从右到左               |
+
+	+ **短路现象：**
+		1. 逻辑运算是自左向右进行的，如果左边的结果已经能够决定结果了，就不会做右边的计算
+		2. a==6&&b\==1(如果左边a\==6不成立就不会去判断b是否等于1)
+		3. 对于&&，左边是false时就不做右边了
+		4. 对于||来说，左边时true时就不做右边了
+		5. ==不要把赋值，包括复合赋值组合进表达式==
+
+#### 2.其他特殊运算符（6.3.3）
+
++ 条件运算符
+	1. count=(count>20) ? count-10 : count+10(条件、条件满足时的值、条件不满足时的值)
+	2. 优先级：条件运算符的优先级高于赋值运算符，但是低于其他运算符
++ 逗号运算
+	1. 在for中使用，例如：for(i=0,j=10;i<j;i++,j – –)
+
+### 四、初见函数
+
+#### 1.函数基础（7.1.1~7.1.3）
+
++  **调用函数：**
+
+	这是一个统计素数求和的代码：
+
+	```c
+	#include <stdio.h>
+	int main()
+	{
+		int m,n;
+		scanf("%d %d",&m,&n);
+		int i;
+		int cnt=0;
+		int sum=0;
+		if(m==1){
+			m=2;//避免出现1也是素数的情况 
+		}
+		for(i=m;i<=n;i++)
+		{	//判断i是不是素数 
+			int isPrime=1;
+			int k;
+			for(k=2;k<i;k++){
+				if(i%k==0){
+					isPrime=0;
+					break;//跳出嵌套的这个for循环 
+				}
+			}
+			if(isPrime){
+				cnt++;
+				sum+=i; 			
+			}
+		}
+		printf("%d %d\n",cnt,sum);
+		return 0;
+	}
+	```
+
+	上面统计素数求和的代码可以进行如下修改：
+
+	```c
+	#include <stdio.h>
+	int isPrime(int i)
+	{	int ret=1;
+		int k;
+		for(k=2;k<i;k++){
+			if(i%k==0){
+				ret=0;
+				break; 
+				}
+			}
+		return ret;
+	}
+	
+		
+	int main()
+	{
+		int m,n;
+		scanf("%d %d",&m,&n);
+		int i;
+		int cnt=0;
+		int sum=0;
+		if(m==1){
+			m=2;
+		}
+		for(i=m;i<=n;i++)
+		{
+			if(isPrime(i)){
+				cnt++;
+				sum+=i; 			
+			}
+		}
+		printf("%d %d\n",cnt,sum);
+		return 0;
+	}
+	```
+
+	求出1\~20，20\~30，35~45的和：
+
+	```c
+	#include <stdio.h>
+	void  sum(int begin,int end)//sum函数
+	{
+		int i;
+		int sum=0;
+		for(i=begin;i<=end;i++){
+			sum+=i;
+		}
+		printf("%d到%d的和是%d\n",begin,end,sum);
+	}
+	
+	int main()
+	{	//调用sum这个函数
+		sum(1,10);
+		sum(20,30);
+		sum(35,45);
+		return 0;	
+	}
+	```
+
++ **什么是函数：**
+
+	+ 函数是一块代码，接受零个或多个参数，做一件事情，并返回零个或一个值
+
+		![](../../Pictures/Saved Pictures/3187F235FA45BE32243AA56F3E2EC3A3.jpg)
+
+	+ **`void` 是 C 语言里的“空类型”或“无值类型”。**
+
++ **调用函数时需要做的事情：**
+	+ 函数名（参数值）
+	+ （）起到了表示函数调用的重要作用
+	+ 即使没有参数也需要（）
+	+ 如果有参数，则需要给出正确的数量和顺序
+	+ 这些值会被按照顺序依次用来初始化函数中的参数
++ **函数返回：**
+	+ 函数知道每一次是哪里调用它，会返回到正确的地方
++ **从函数中返回值：**
+	+ return停止函数的执行，并送回一个值
+		1. return；
+		2. return 表达式；
+	+ 一个函数里可以出现多个return
+	+ 
+	+ ![](../../Pictures/Saved Pictures/554F8247B852EB0BBBCF638FDB408135.jpg)
+
++ **没有返回值的函数：**
+
+	![](../../Pictures/Saved Pictures/9FB4ACBA6804DE26F2FFBACB6B08E589.jpg)
+
+​		**==需要注意的是：如果函数有返回值，则必须使用带值的return==**
+
+
+
+#### 2.函数的进阶细节（7.2.1~7.2.4）
+
++ **函数先后关系：**
+
+  + C的编译器自上而下顺序分析你的代码
+
+  ![](../../Pictures/Saved Pictures/2AE4323984FF4612A7820B7A1DC66451.jpg)
+
+  + 如果把要调用的函数放在了下面：
+
+  	```c
+  	#include <stdio.h>
+  	
+  	void  sum(int begin,int end);//原型声明
+  	
+  	int main()
+  	{	//调用sum这个函数
+  		sum(1,10);
+  		sum(20,30);
+  		sum(35,45);
+  		return 0;	
+  	}
+  	
+  	//函数的定义
+  	void  sum(int begin,int end)//sum函数
+  	{
+  		int i;
+  		int sum=0;
+  		for(i=begin;i<=end;i++){
+  			sum+=i;
+  		}
+  		printf("%d到%d的和是%d\n",begin,end,sum);
+  	}
+  	```
+
++ **函数原型：**
+
+  + 函数头，以分号”；“结尾，就构成了函数的原型。如：上面代码的`void  sum(int begin,int end);`
+  + 目的：告诉编译器这个函数长什么样子
+
+  + 原型里可以不写参数的名字，但一般仍然写上
+
++ **参数传递：**
+
+  + 调用函数时给的值与参数的类型不匹配时时C语言传统上最大的漏洞，编译器总是悄悄替你把类型转换好，但是着很可能不是你所期望的（后续的语言，C++/Java在这方面很严格）
+  + C语言在调用函数时，**永远只能传值给函数**
+  + 传值：
+  	1. 每个函数有自己的空间变量，参数也位于这个独立的空间中，和其他函数没有关系
+  	2. 它们就是参数和值的关系
+
++ **本地变量：**
+
+  + 函数的每次运行，就产生了一个独立的变量空间，在这个空间中的变量，是函数的这次运行所独有的，称作本地变量
+
+  + 定义在函数内部的变量就是本地变量
+
+  + 参数也是本地变量
+
+  + 本地变量的规则：
+    1. 本地变量是定义在块内的（块就是大括号）
+
+    2. 它可以是定义在函数的块内
+
+    3. 也可以定义在语句的块内
+
+    4. 甚至可以随便拉一对大括号来定义变量
+
+    5. **程序运行进入这个块之前，其中的变量不存在，离开这个块，其中的变量就消失了**
+
+    	```c
+    	#include <stdio.h>
+    	
+    	int f(void);
+    	
+    	int main(void)
+    	{
+    		f();
+    		f();
+    		f();
+    		return 0;
+    	}
+    	
+    	
+    	int f(void)
+    	{
+    		int x=0;
+    		x++;
+    		printf("%d\n",x);
+    		return x;
+    	}最终输出的结果是都是1
+    	```
+
+    	
+
+    6. 块外面定义的变量在里面仍然有效
+
+    7. 块里面定义了和外面同名的变量则掩盖了外面的（**局部变量优先级高于全局变量**）
+
+    8. **不能在同一个块中定义同名的变量**
+
+    9. 本地变量不会被默认初始化
+
+    10. 参数在进入函数的时候被初始化了
+
++ **static:**
+
+	+ 也是一种特殊的本地变量，它的特点：
+		1. 作用域仍然是本地的：只能在函数里用
+		2. 生命周期是整个程序：程序开始到结束一直存在，不会因为函数返回就销毁
+		3. 而且它只初始化一次，之后会保留上一次的值
+
+	+ 例如：
+
+		```c
+		#include <stdio.h>
+		
+		int f(void);
+		
+		int main(void)
+		{
+			f();
+			f();
+			f();
+			return 0;
+		}
+		
+		
+		int f(void)
+		{
+			static int x=0;
+			x++;
+			printf("%d\n",x);
+			return x;
+		}最后输出的是1，2，3
+		```
+
+		
+
++ **函数庶事：**
+
+  + 没有参数时：
+
+  	`void swap(void)` 
+
+  + 在调用函数时f（a,b）中的逗号是标点符号，不是运算符
+
+  	但是如果写成f((a,b))则就是逗号运算符
+
+  + C 语言**不允许**在函数内部再定义函数，即不支持嵌套定义
+
+  + `main` 也是一个函数，所以它可以写成 `int main(void)`，这样更明确
+
+  + `main` 函数返回的 `0` 是有意义的，它用来告诉操作系统程序的运行状态：
+
+  	* **`return 0`**：表示程序**正常结束**。
+  	* **`return 非0值`**：表示程序**出错**了
+
+  +  **如何检查 `main` 的返回值**
+
+  	不同的操作系统检查方式不同：
+
+  	* **Windows**：可以使用 `if errorlevel 1...` 来判断。
+  	* **Unix/Linux (Bash)**：使用 `echo $?` 来查看上一个程序的返回值。
+  	* **Csh**：使用 `echo $status`。
+
+### 五、数组
+
+#### 1.初试数组（8.1.1）
+
++ 如何写一个程序计算用户输入的数字的平均数：
+
+	```c
+	#include <stdio.h>
+	
+	int main(){
+		int x;
+		int sum=0;
+		int count=0;
+		scanf("%d",&x);
+		while(x!=-1){
+			sum+=x;
+			count++;
+			scanf("%d",&x);
+			
+		}
+		printf("%f\n",1.0*sum/count);
+		
+		return 0; 
+	}
+	```
+
+	将上面的题目改为:如何写一个程序计算用户输入的数字的平均数，并输出所有大于平均数的数
+
+	```c
+	#include <stdio.h>
+	
+	int main(void)
+	{
+	    int x;
+	    double sum = 0;
+	    int cnt = 0;
+	    int number[100];//定义数组
+	    int i;
+	
+	    scanf("%d", &x);
+	    while (x != -1) {
+	        if (cnt >= 100) {
+	            printf("数组已满，停止读入\n");
+	            break;
+	        }
+	        number[cnt] = x;//对数组中的元素赋值
+	        sum += x;
+	        cnt++;
+	        scanf("%d", &x);
+	    }
+	
+	    if (cnt > 0) {
+	        double avg = sum / cnt;
+	        printf("平均值：%f\n", avg);
+	        printf("大于平均值的数：");
+	        for (i = 0; i < cnt; i++) {
+	            if (number[i] > avg) {
+	                printf("%d\t", number[i]);//使用数组中的元素（遍历数组）
+	            }
+	        }
+	        printf("\n");
+	    }
+	
+	    return 0;
+	}
+	```
+
+#### 2.定义数组（8.1.2）
+
++ **==<类型>变量名称[元素数量]==**。如：int grades[100];double weight[20]
+
++ 元素数量必须是**整数**
+
+	现在的元素的数量也可以是变量：
+
+	```c
+	#include <stdio.h>
+	
+	int main(void)
+	{
+	    int x;
+	    double sum = 0;
+	    int cnt = 0;
+	    int a;//数组中的变量
+	
+	    scanf("%d", &a);
+	
+	    if (a <= 0 || a > 1000) {
+	        printf("数组大小必须在 1 到 1000 之间\n");
+	        return 1;
+	    }
+	
+	    int number[a];   // C99 变长数组
+	    int i;
+	
+	    scanf("%d", &x);
+	    while (x != -1) {
+	        if (cnt >= a) {
+	            printf("数组已满，停止读入\n");
+	            break;
+	        }
+	        number[cnt] = x;
+	        sum += x;
+	        cnt++;
+	        scanf("%d", &x);
+	    }
+	
+	    if (cnt > 0) {
+	        double avg = sum / cnt;
+	        printf("平均值：%f\n", avg);
+	        printf("大于平均值的数：");
+	        for (i = 0; i < cnt; i++) {
+	            if (number[i] > avg) {
+	                printf("%d\t", number[i]);
+	            }
+	        }
+	        printf("\n");
+	    }
+	
+	    return 0;
+	}
+	```
+
++ **数组**
+
+	+ 是一种容器（放东西的东西），特点是：
+		1. 其中所有的元素具有相同的数据类型
+		2. 一旦创建，不能改变大小
+		3. 数组中的元素在内存中是连续依次排列的
+
+	+ ![](../../Pictures/Saved Pictures/7C0F515FD07647664300677D39D3FE56.jpg)
+
++ **数组的单元：**
+	+ 数组的每个单元就是数组类型的一个变量
+	+ 使用数组时放在[]中的数字叫做下标或索引，下标从0开始计算
+	+ 可以创建一个长度为0的数组：int a[0]  可以存在，但是无用
+
+#### 3.数组的例子（8.1.3）
+
++ 写一个程序，输入数量不确定的[0.9]范围内的整数，统计每一种数字出现的次数。输入-1表示结束
+
+	```c
+	#include <stdio.h>
+	int main()
+	{
+		const int number=10;//数组的大小
+		int x;
+		int count[number];//定义数组
+		int i;
+	    //初始化数组
+		for(i=0;i<number;i++){
+			count[i]=0;
+		}
+		scanf("%d",&x);
+		while(x!=-1){
+			if(x>=0&&x<=9){
+				count[x]++;//数组参与运算
+			}
+			scanf("%d",&x);
+		}
+	    //遍历数组做输出
+		for(i=0;i<number;i++){
+			printf("%d:%d\t",i,count[i]);
+		}
+		return 0;
+	}
+	```
+
+#### 4.数组运算（8.2.1）
+
++ **数组的集成初始化：**
+
+	+ int a[]={2,4,6,7,1,3,5,9,11,13,23,14,32}
+
+		![](../../Pictures/Saved Pictures/1.jpg)
+
++ **数组的大小**
+
+	+ sizeof给出整个数组所占据的内容的大小，单位是字节
+
+		**可以用`sizeof(a)/sizeof(a[0])`来计算数组的大小**
+
+		sizeof(a[0])给出数组中单个元素的大小，于是相除就得到了数组的单元个数
+
+		这样的代码，一旦修改数组中初始的数据，==不需要修改遍历的代码==
+
++ **数组的赋值：**
+
+	![](../../Pictures/Saved Pictures/2.jpg)
+
+	+ 数组作为函数参数时，往往必须在用另一个参数来传入数组的大小
+		1. 不能在[]中给出数组大小，不能再利用sizeof来计算数组的元素个数
+
++ **遍历数组：**
+
+	![](../../Pictures/Saved Pictures/3.jpg)
+
+#### 5.数组的例子：素数（8.2.2）
+
++ 算素数的几个方法：
+
+	1. **基础版（2 到 x-1 试除）**：用 x 除以从 2 开始的所有数。效率最低，循环近 n 次。
+
+	2. **优化版（去掉偶数）**：2 是素数，其他偶数直接排除。对奇数，从 3 开始每次 +2 试除。循环次数约减少到 n/2。
+
+	3. **终极版（试到 sqrt(x)）**：数学证明，若 x 非素数，必有一个 ≤ sqrt(x) 的因子。只需循环到 `sqrt(x)` 即可，效率极高。
+
++ 构造素数表：
+
+	```c
+	#include <stdio.h>
+	
+	int main()
+	{
+	    const int maxNumber = 25;
+	    int isPrime[maxNumber];
+	    int i;
+	    int x;
+	    for ( i=0; i<maxNumber; i++ ) {
+	        isPrime[i] = 1;
+	    }
+	    for ( x=2; x<maxNumber; x++ ) {
+	        if ( isPrime[x] ) {
+	            for ( i=2; i*x<maxNumber; i++ ) {
+	                isPrime[i*x] = 0;
+	            }
+	        }
+	    }
+	    for ( i=2; i<maxNumber; i++ ) {
+	        if ( isPrime[i] ) {
+	            printf("%d\t", i);
+	        }
+	    }
+	    printf("\n");
+	
+	    return 0;
+	}
+	```
+
+#### 6.二维数组（8.2.3）
+
++ **int a[3]\[5]通常理解为a是一个3行5列的矩阵**
+
++ **二维数组的遍历：**
+
+  ```c
+  #include <stdio.h>
+  int main()
+  {
+  	int i,j;
+  	int a[3][5];
+  	for(i=0;i<3;i++){
+  		for(j=0;j<5;j++){
+  			a[i][j]=i*j;
+  			printf("%d\t",a[i][j]);
+  		}
+  		printf("\n");
+  	}
+      return 0;
+  }
+  ```
+
+  + a[i,j]就是a[j]
+
++ **二维数组的初始化（8.2.3）**
+
+	![](../../Pictures/Saved Pictures/4.jpg)
+
+```c
+#include <stdio.h>
+int main()
+{
+	int a[2][5]={
+		{1,2,3,4,5},
+		{1,2,3,4,5},
+	} ;
+	int i,j;
+	for(i=0;i<2;i++)
+	{	
+		for(j=0;j<5;j++){
+			printf("%d\t",a[i][j]);
+	}
+		printf("\n");
+	}
+	return 0;
+}
+```
+
++ ![](../../Pictures/Saved Pictures/D438755ACA4ADFD56402D44E508FA6A2.jpg) 
+
+	+ 游戏代码如下：
+
+		```c
+		#include <stdio.h>
+		
+		int main() {
+		    const int size = 3;
+		    int board[size][size];
+		    int i, j;
+		    int numOfX;
+		    int numOfO;
+		    int result = -1;    // -1:没人赢，1:X赢，0:O赢
+		
+		    // 1. 读入矩阵
+		    for ( i=0; i<size; i++ ) {
+		        for ( j=0; j<size; j++ ) {
+		            scanf("%d", &board[i][j]);
+		        }
+		    }
+		
+		    // 2. 检查行
+		    for ( i=0; i<size && result==-1; i++ ) {
+		        numOfO = numOfX = 0;
+		        for ( j=0; j<size; j++ ) {
+		            if ( board[i][j] == 1 ) {
+		                numOfX++;
+		            } else {
+		                numOfO++;
+		            }
+		        }
+		        if ( numOfO == size ) {
+		            result = 0;
+		        } else if ( numOfX == size ) {
+		            result = 1;
+		        }
+		    }
+		
+		    // 3. 检查列
+		    for ( j=0; j<size && result==-1; j++ ) {
+		        numOfO = numOfX = 0;
+		        for ( i=0; i<size; i++ ) {
+		            if ( board[i][j] == 1 ) {
+		                numOfX++;
+		            } else {
+		                numOfO++;
+		            }
+		        }
+		        if ( numOfO == size ) {
+		            result = 0;
+		        } else if ( numOfX == size ) {
+		            result = 1;
+		        }
+		    }
+		
+		    // 4. 检查主对角线 (左上到右下)
+		    if ( result == -1 ) {
+		        numOfO = numOfX = 0;
+		        for ( i=0; i<size; i++ ) {
+		            if ( board[i][i] == 1 ) {
+		                numOfX++;
+		            } else {
+		                numOfO++;
+		            }
+		        }
+		        if ( numOfO == size ) {
+		            result = 0;
+		        } else if ( numOfX == size ) {
+		            result = 1;
+		        }
+		    }
+		
+		    // 5. 检查副对角线 (右上到左下)
+		    if ( result == -1 ) {
+		        numOfO = numOfX = 0;
+		        for ( i=0; i<size; i++ ) {
+		            if ( board[i][size-i-1] == 1 ) {
+		                numOfX++;
+		            } else {
+		                numOfO++;
+		            }
+		        }
+		        if ( numOfO == size ) {
+		            result = 0;
+		        } else if ( numOfX == size ) {
+		            result = 1;
+		        }
+		    }
+		
+		    // 6. 输出结果
+		    if ( result == 1 ) {
+		        printf("X赢\n");
+		    } else if ( result == 0 ) {
+		        printf("O赢\n");
+		    } else {
+		        printf("没人赢\n"); // 平局或没有连成线
+		    }
+		
+		    return 0;
+		}
+		```
+
+### 六、指针
+
+#### 1.取地址运算（9.1.1）
+
++ **运算符&：**
+
+	1. `scanf(“%d”,&i)`;里的&
+	2. 获得变量的地址，它的操作必须是变量
+	3. 地址的大小是否与int相同取决于编译器（**用%p打印或读取指针的值**）
+
+	+ **&不能取的地址符：**
+
+		1. &不能对没有地址的东西取地址（只能对一个变量取地址）`&(a+b)`，`&(a++)`，`&(++a)`
+
+	
+		2. 相邻变量的地址：
+		
+		```c
+		#include <stdio.h>
+		int main()
+		{
+			int i=0;
+			int p;
+			printf("%p\n",&i);
+			printf("%p\n",&p);
+			return 0;
+		}// 000000000062FE1C
+		//000000000062FE18
+		```
+		
+		**先定义的变量从上往下分配**
+	
+	3. 数组的地址，数组单元的地址，相邻的数组单元的地址
+	
+		```c
+		#include <stdio.h>
+		int main()
+		{
+			int a[10];
+			printf("%p\n",&a);
+			printf("%p\n",a);
+			printf("%p\n",&a[0]);
+			printf("%p\n",&a[1]);
+			return 0;
+		}//&a的值=a的值=a[0]的值
+		//000000000062FDF0
+		//000000000062FDF0
+		//000000000062FDF0
+		//000000000062FDF4
+		```
+
+#### 2.指针变量（9.1.2）
+
++ **一个指针类型的变量就是保存地址的变量：**
+
+	+ `int *p=&i`，p就表示一个指针（`int* p=&i`也是指针）
+	+ **`int* p,q`中的q只是一个普通类型的int变量**
+
+	![](../../Pictures/Saved Pictures/5.jpg)
+
++ **作为参数的指针：**
+
+	![](../../Pictures/Saved Pictures/6.jpg)
+
+	+ 代码如下：
+
+		```c
+		#include <stdio.h>
+		
+		void f(int *p);
+		
+		int main(void)
+		{
+			int i=0;
+			printf("&i=%p\n",&i);
+			f(&i);
+			return 0;
+		}
+		
+		void f(int *p)
+		{
+			printf(" p=%p\n",p);
+		}
+		
+		//&i=000000000062FE1C
+		// p=000000000062FE1C
+		
+		```
+
+		在其他函数中改变主函数中变量的值：
+
+		```c
+		#include <stdio.h>
+		
+		void f(int *p);
+		void g(int k);
+		
+		int main(void)
+		{
+			int i=6;
+			printf("&i=%p\n",&i);
+			f(&i);
+			g(i);
+			return 0;
+		}
+		
+		void f(int *p)
+		{
+			printf(" p=%p\n",p);
+			printf("*p=%d\n",*p);
+			*p=26;
+		}
+		
+		void g(int k)
+		{
+			printf("k=%d\n",k);
+		}
+		//&i=000000000062FE1C
+		// p=000000000062FE1C
+		//*p=6
+		//k=26
+		```
+
++ **传入地址：**
+
+	为什么`int i;scanf("%d",i);`编译没有报错：
+
+	1. `scanf` 是可变参数函数，`...` 部分编译器不检查类型。
+	2. 编译器默认不解析格式字符串，除非开启 `-Wall` 等警告。
+	3. 这不是正确代码，运行时是未定义行为，可能崩溃。
+
+#### 3.指针的使用（9.1.3）
+
++ 指针应用场景一：
+
+	 交换两个变量的值：
+
+	```c
+	#include <stdio.h>
+	
+	void swap(int *pa,int *pb);
+	    
+	int main()
+	{
+		int a=5;
+		int b=6;
+		swap(&a,&b);
+		printf("a=%d b=%d",a,b);
+	}
+	void swap(int *pa,int *pb)
+	{
+		int t=*pa;
+		*pa=*pb;
+		*pb=t;
+	}
+	```
+
++ 指针应用场景二：
+
+	+ 函数返回多个值时，某些值就只能通过指针返回
+
+	+ 传入的参数实际上是需要保存带回的结果的变量
+
+		如：
+
+		```c
+		#include <stdio.h>
+		
+		void minmax(int a[],int length, int *min,int *max);
+		
+		int main()
+		{
+			int a[]={1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20};
+			int min,max;
+			minmax(a,sizeof(a)/sizeof(a[0]),&min,&max);
+			printf("min=%d,max=%d",min,max);
+			return 0;
+		}
+		void minmax(int a[],int length, int *min,int *max)
+		{
+			int i;
+			*min=*max=a[0];
+			for(i=1;i<length;i++){
+				if(a[i]<*min){
+					*min=a[i];
+				}
+				if(a[i]>*max){
+					*max=a[i];
+				}
+			}
+		}
+		```
+
+		![](../../Pictures/Saved Pictures/6.jpg)
+
+	+ 对上述问题的一个例子：
+
+		```c
+		#include <stdio.h>
+		
+		int divide (double a,double b,double *result );
+		
+		int main()
+		{
+			double a;
+			double b;
+			scanf("%lf %lf",&a,&b);
+			double c;
+			if(divide(a,b,&c)){
+				printf("%f/%f=%f\n",a,b,c);
+			}
+			return 0;
+		}
+		
+		int divide (double a,double b,double *result )
+		{
+			int ret=1;
+			if(b==0) ret=0;
+			else{
+				*result=a/b;
+			}
+			
+			return ret;
+		}
+		```
+
++ **指针最常见的错误：**
+
+	定义了指针变量，还没有指向任何变量，就开始使用指针
+
+#### 4.指针与数组（9.1.4）
+
++ **数组作为函数参数会“退化”为指针：**
+
+​		当你把数组传给函数时，函数参数表里的 `int a[]` **实际上就是一个指针**，完全等价于 `int *a`。
+
+​		这意味着在函数内部，`a` 只是一个指向数组首元素的指针，不再代表整个数组
+
++ **下面四种函数原型是等价的：**
+
+	1. `int sum(int *ar, int n);`
+
+	2. `int sum(int *, int);`
+
+	3. `int sum(int ar[], int n);`
+
+	4. `int sum(int [], int);`
+
++ **数组变量本身就是一种特殊的指针：**
+
+	* 数组名 `a` 本身就代表地址，所以 `int *p = a;` 不需要写 `&a`。
+
+	* 但对数组元素取地址，则需要用 `&`，例如 `&a[0]`。
+
+	* 数组和指针都可以使用 `[]` 运算符，`p[0]` 和 `a[0]` 是等价的。
+
+	+ *运算符可以对指针做，也可以对数组做
+	+ 数组变量是const的指针，所以不能被赋值
+		+ int a[]⟺int *const a=……
+
+#### 5.指针与const（9.1.5）
+
++ **两种 `const`，两种含义**
+
+  + `int *const p` 的意思就是：
+
+  	> **`p` 是一个常量指针，它只能绑定一个地址，不能再指向别的地方；但可以通过 `*p` 修改它指向的那个变量的值。**
+
+  + **`const int *p` (或 `int const *p`)**
+
+  	* **含义**：**“指向常量的指针”**。你不能通过这个指针 `p` 去修改它所指向的值，但 `p` 本身可以指向别的地址。
+  	* `const` 在 `*` 的左边，锁住的是**数据**。
+
+  	+ 代码示例：
+
+  	+ ```c
+  		int i = 10, j = 20;
+  		const int *p = &i; // p 指向 i
+  		
+  		// *p = 100;      // ❌ 错误！不能修改 *p 的值
+  		p = &j;            // ✅ 合法！p 可以指向另一个变量 j
+  		```
+
+  
+
+  + | 写法                  | 含义               | 能否改 `*p` | 能否改 `p` |
+  	| :-------------------- | :----------------- | :---------- | :--------- |
+  	| `const int *p`        | 指向常量的指针     | 否          | 是         |
+  	| `int const *p`        | 同上               | 否          | 是         |
+  	| `int * const p`       | 常量指针           | 是          | 否         |
+  	| `const int * const p` | 指向常量的常量指针 | 否          | 否         |
+  	| `int const * const p` | 同上               | 否          | 否         |
+
++ **转换：**
+
+	![](../../Pictures/Saved Pictures/7.jpg)
+
++ **const数组：**
+
+	+ const int a[]={1,2,3,4,5,6};
+	+ 数量变量已经是const的指针了，这里的const表明数组的每个单元都是const int
+	+ 所以必须通过初始化进行赋值
+
++ **保护数组值：**
+
+	![](../../Pictures/Saved Pictures/8.jpg)
+
+#### 6.指针运算（9.2.1）
+
++ **指针 + 1 不等于地址 + 1:**
+
+  + 给指针加 1，表示让它指向**下一个变量**。实际地址增加多少，**取决于指针所指类型的大小**
+
+  + 例如：
+
+  	```c
+  	#include <stdio.h>
+  	int main()
+  	{
+  		char ac[]={0,1,2,3,4,5,6,7,8,9,};
+  		char *p=ac;
+  		printf("p =%p\n",p);
+  		printf("p+1=%p\n",p+1);
+  		
+  		int ai[]={0,1,2,3,4,5,6,7,8,9,};
+  		int *q=ai;
+  		printf("q =%p\n",q);
+  		printf("q+1=%p\n",q+1);
+  		return 0;
+  	}
+  	//p =000000000062FE00
+  	//p+1=000000000062FE01
+  	
+  	//q =000000000062FDD0
+  	//q+1=000000000062FDD4
+  	```
+
+  + ==实际上是移到下一个单元去==
+
+  	
+
++ **这些算数运算可以对指针做：**
+
+  + 给指针加、减一个整数（+、+=、-、-=）
+
+  + 递增递减（++、– –）
+
+  + 两个指针相减：：
+
+  	```c
+  	#include <stdio.h>
+  	int main()
+  	{
+  		int ac[]={0,1,2,3,4,5,6,7,8,9,};
+  		int *p=ac;
+  		int *p1=ac+2;
+  		printf("%p\n",p);
+  		printf("%p\n",p1);
+  		printf("p1-p=%d\n",p1-p);
+  		return 0;	
+  	}
+  	//000000000062FDE0
+  	//000000000062FDE8
+  	//p1-p=2
+  	//地址的差除以sizeof(int)
+  	```
+
+  	![](../../Pictures/Saved Pictures/10.jpg)
+
+  + 代码：(实现遍历)
+
+  + 
+
+  	```c
+  	#include <stdio.h>
+  	int main()
+  	{
+  		int ac[]={0,1,2,3,4,5,6,7,8,9,-1};
+  		int *p=ac;
+  		while(*p!=-1){
+  			printf("%d\n",*p++);
+  		}
+  		return 0;
+  	}
+  	```
+
++ **指针比较：**
+
+  + <,<=,==,>,>=,!=都可以对指针做
+
+  + 比较它们在内存中的地址
+
+  + 数组中的单元的地址肯定是线性递增的
+
+  	
+
++ **0地址：**
+
+  ![](../../Pictures/Saved Pictures/9.jpg)
+
+  
+
++ **指针的类型：**
+
+  + 无论指向什么类型，所有的地址的大小都是一样的，因为都是地址
+  + 但是指向不同类型的指针是不能直接互相赋值的
+  + 这是为了避免用错指针
+
+  
+
++ **指针的类型转换：**
+
+  ![](../../Pictures/Saved Pictures/11.jpg)
+
+  
+
++ **用指针来做什么：**
+
+	+ 需要传入较大的数据时用作参数
+	+ 传入数组后对数组做操作
+	+ 函数返回不止一个结果
+	+ 需要用函数来修改不止一个变量
+
+7**.动态内存分配：**
+
++ malloc:
+
+	![](../../Pictures/Saved Pictures/12.jpg)
+
+	+ 代码：
+
+		```c
+		#include <stdio.h>
+		#include <stdlib.h>
+		
+		int main()
+		{
+			int number;
+			int *a;
+			int i;
+			printf("请输入数量：");
+			scanf("%d",&number);
+			//int a[number];
+			a=(int*)malloc(number*sizeof(int));//malloc返回的是void *所以要强制类型转换
+			//可以把a当数组来用
+		    for(i=0;i<number;i++){
+				scanf("%d",&a[i]);
+			}
+		    
+			for(i=number-1;i>=0;i--){
+				printf("%4d",a[i]);
+			}//逆序输出数组
+		    
+			free(a);//有借有还
+			
+			return 0;
+		}
+		```
+
+	+ 没空间了：
+
+		+ 如果申请失败则返回0，或则叫做NULL
+
++ **free():**
+	+ 把申请得来的空间还给“系统”
+	+ 申请过的空间，最终都应该要还
+	+ 只能还申请来的空间的首地址
+	+ 常见问题：
+		+ 申请了没free：长时间运行内存逐渐下降
+		+ free过了再free
+		+ 地址变过了，直接去free
+
+### 七、字符串
+
+#### 1.字符串（10.1.1）
+
++ **对比下面两个：**
+
+	1. 字符数组：`char word[]={'H','e','l','l','o','!'};`
+	2. 字符串：`char word[]={'H','e','l','l','o','!','\0'};`(多了‘\0’ 也可以去掉单引号和\\)
+
+	+ ![](../../Pictures/Saved Pictures/13.jpg)
+
++ **字符串变量：**
+
+	1. char *str=“Hello”;
+
+	2. char word[]=“Hello”;
+
+	3. char line[10]=“Hello”;(“Hello”在line中会占据6个字节的空间)
+
+	4. **两个相邻的字符串常量会被自动连接起来：**
+
+		```c
+		#include <stdio.h>
+		int main()
+		{
+			printf("1""2");
+			return 0;
+		}//最后输出12
+		```
+
+		或则：
+
+		```c
+		#include <stdio.h>
+		int main()
+		{
+			printf("1\
+		2");
+			return 0;
+		}最后输出也是12
+		```
+
++ C语言的字符串是以字符数组的形态存在的
+
++ 不能用运算符对字符串做运算
+
++ 通过数组的方式可以遍历字符串
+
++ 唯一特殊的地方是字符串字面量可以用来初始化字符数组
+
+#### 2.字符串常量（10.1.2）
+
++ `char *s="Hello world!";`
+
+	+ s是一个指针，初始化为指向一个字符串常量
+
+	+ 由于这个常量所在的地方，所以实际上s是const char *s，但由于历史的原因，编译器接受不带const的写法
+
+	+ 但是试图对s所指的字符串做写入会导致严重的后果
+
+	+ 如果需要修改字符串，应该用数组：
+
+		`char s[]="Hello,wolrd!;"`
+
++ **选用指针和数组的情形：**
+
+	+ 选数组：
+
+		作为本地变量空间自动被回收
+
+	+ 选指针：
+
+		1. 处理参数
+		2. 动态分配空间
+
+	+ 简单来说：
+		1. 如果要构造一个字符串用数组
+		2. 如果要处理一个字符串用指针
+
++ **char*是不是字符串？**
+	
+	+ 字符串可以表达为char*的形式
+	+ char*不一定是字符串
+	+ 本意是指向字符的指针，可能指向的是字符的数组（就像int*一样）
+	+ 只有它所指的字符数组有结尾的0，才能说它所指的是字符串
+
+#### 3.字符串输入输出(10.1.3)
+
++ **字符串赋值：**
+
+	```c
+	char *t="title";
+	char *s;
+	s=t;
+	//并没有产生新的字符串，只是让指针s指向了t所指的字符串，对s的任何操作就是对t做的
+	```
+
++ **输入：**`scanf("%s",string);`
+
+	**输出：**`printf("%s",string);`
+
+	+ scanf读入一个单词（到空格、tap或回车为止）
+	+ scanf是不安全的，因为不知道要读入的内容的长度
+
+	+ 安全的输入：
+
+		可以用`scanf("%7s",string);`来控制输入的字符数
+
+		%和s之间的数字表示最多允许读入的字符的数量，这个数字应该比数组的大小小1
+
++ **常见错误：**
+
+	![](../../Pictures/Saved Pictures/14.jpg)
+
++ **空字符串：**
+	+ `char buffer[100]="";`这是一个空的字符串，buffer[0]=‘0’
+	+ `char buffer[]="";`这个数组长度只有1
+
+#### 4.字符串数组（10.1.4）
+
++ `char **a`
+
+	a是一个指针，指向另一个指针，那个指针指向一个字符（串）
+
++ `char a[3][10]`：内存连续，3 行 10 列，每行 10 字节；
++ `char *a[]`
+
++ 用字符串数组来实现最开始用switch-case来表示月份的代码：
+
+	```c
+	#include <stdio.h>
+	
+	int main(void) {
+	    // 1. 定义指针数组，存放12个月的英文名
+	    char *month[] = {
+	        "January", "February", "March", "April", "May", "June",
+	        "July", "August", "September", "October", "November", "December"
+	    };
+	    
+	    int m;
+	    printf("请输入月份 (1-12): ");
+	    scanf("%d", &m);
+	
+	    // 2. 检查输入范围是否合法
+	    if (m >= 1 && m <= 12) {
+	    // 3. 数组下标从0开始，所以用 m-1 来获取对应月份
+	        printf("%s\n", month[m - 1]);
+	    } else {
+	        printf("输入无效，请输入1到12之间的数字。\n");
+	    }
+	    
+	    return 0;
+	}
+	```
+
+	
+
++ **程序参数：**
+
+	+ `int main(int argc,char const *argv[])`
+
+		+ argv[0]是命令本身
+
+		+ 当使用Unix的符号链接时，反映符号链接的名字
+
+		+ ```c
+			#include <stdio.h>
+			
+			int main(int argc, char **argv)
+			{
+			    printf("argc = %d\n", argc);
+			
+			    for (int i = 0; i < argc; i++) {
+			        printf("argv[%d] = %s\n", i, argv[i]);
+			    }
+			
+			    return 0;
+			
+			```
+
+		+ argv ──> ┌─────────┐
+			         │ argv[0] │ ──> "./main"
+			         ├─────────┤
+			         │ argv[1] │ ──> "hello"
+			         ├─────────┤
+			         │ argv[2] │ ──> "world"
+			         ├─────────┤
+			         │ argv[3] │ ──> "123"
+			         ├─────────┤
+			         │ argv[4] │ ──> NULL
+			         └─────────┘
+
+#### 5.单字符输入输出（10.2.1）
+
++ putchar
+	+ `int putchar(int c);`
+	+ 向标准输出写一个字符
+	+ 返回写了几个字符，EOF(-1)表示写失败
+
++ getchar
+	+ `int gerchar(void)`;
+	+ 从标准输入读入一个字符
+	+ 返回类型是int是为了返回EOF(-1)
+
+#### 6.字符串函数strlen(10.2.2)
+
++ strlen:
+
+	+ sizeof_t strlen(const char *s);
+
+	+ 返回s的字符串长度（不包括结尾的0）
+
+	+ ```c
+		#include <stdio.h>
+		#include <string.h>
+		int main()
+		{
+			char a[]= "love you";
+			printf("strlen(a)=%lu\n",strlen(a));
+			printf("sizeof(a)=%lu\n",sizeof(a));
+			return 0;
+		}
+		//strlen(a)=8
+		//sizeof(a)=9
+		```
+
+		或则用调用函数来实现：
+
+		```c
+		#include <stdio.h>
+		#include <string.h>
+		
+		size_t mylen(const char *s)
+		{
+			int cnt=0;
+			while(s[cnt]!='\0'){
+				cnt++;
+			}
+			return cnt;
+		 } 
+		int main()
+		{
+			char a[]= "love you";
+			printf("strlen(a)=%lu\n",mylen(a));
+			printf("sizeof(a)=%lu\n",sizeof(a));
+			return 0;
+		}
+		```
+
+#### 7.字符串函数strcmp(10.2.3)
+
++ **strcmp**
+	+ `int strcmp(const char *s1,const char *s2);`
+	
+	+ 比较两个字符串，返回：
+		+ 0：s1=s2
+		
+		+ 1:s1>s2
+		
+		+ -1:s1<s2
+		
+			代码如下：
+		
+			```c
+			#include <stdio.h>
+			#include <string.h>
+			int main()
+			{
+				char s1[]="abc";
+				char s2[]="abc";
+				
+				printf("%d\n",strcmp(s1,s2));
+			
+				return 0;
+			 } //最后输出0，表示s1和s2中的内容完全一样
+			```
+		
+			写一个自己的mycmp:
+		
+			```c
+			#include <stdio.h>
+			#include <string.h>
+			int mycmp(const char *s1,const char *s2)
+			{
+				int idx=0;
+				while(1){
+					if(s1[idx]!=s2[idx]){
+						break;
+					}
+					else if(s1[idx]=='\0'){
+						break;
+					}
+					idx++;
+				}
+				return s1[idx]-s2[idx];
+			}
+			int main()
+			{
+				char s1[]="abc";
+				char s2[]="abc ";
+				
+				printf("%d\n",mycmp(s1,s2));
+				printf("%d\n",mycmp("Abc","abc"));
+				printf("%d\n",'a'-'A');
+			
+				return 0;
+			 } 
+			//-32
+			//-32
+			//32
+			```
+		
+			可以把上面的while循环**更简洁**：
+		
+			1. 第一种：
+		
+			```c
+			while(s1[idx]==s2[idx]&&s1[idx]!='\0'){
+				idx++;
+			}
+			```
+		
+			2. 第二种：
+		
+			```c
+			while(*s1==*s2&&*s1!='\0'){
+			    s1++;
+			    s2++;
+			}
+			return *s1-*s2;
+			```
+
+#### 8.字符串函数strcpy(10.2.4)
+
++ **strcpy**
+	+ `char *strcpy(char *restrict dst,const char *restrict src);`
+	+ 把src的字符串拷贝到dst
+	+ restrict表明src和dst不重叠（C99）
+	+ 返回dst
+	+ 为了能链起代码来
+
++ **复制一个字符串**
+
+	```c
+	char *dst=(char *)malloc(strlen(src)+1);
+	strcpy(dst,src);
+	```
+
++ **自己的mycpy:**
+
+	```c
+	#include <stdio.h>
+	#include <string.h>
+	
+	char *mycpy(char *dst,const char *src)
+	{
+		int idx=0;
+		while(src[idx]){
+			dst[idx]=src[idx];
+			idx++;
+		}
+		dst[idx]='\0';
+		return dst;
+	}
+	
+	int main()
+	{
+		char s1[100]={0};
+		char s2[100];
+		scanf("%99s",s2);
+		mycpy(s1,s2);
+		printf("%s",s1);
+		
+		return 0;
+	}
+	```
+
+	mycpy中也可以用指针来写代码:
+
+	```c
+	char *mycpy(char *dst,const char *src)
+	{
+		char *ret=dst;
+		while(*src){
+			*dst++=*src++;
+		}
+		*dst='\0';
+		return ret;
+	}
+	```
+
+	更精简的写法：
+
+	```c
+	char *mycpy(char *dst,const char *src)
+	{
+		char *ret=dst;
+		while((*dst++=*src++));
+		return ret;
+	}
+	```
+
+#### 9.字符串中搜索函数（10.2.5）
+
++ 字符串中找字符
+
+	+ `char *strchr(const char *s,int c);`(从左边找过来)
+
+	+ `char *strrchr(const char *s,int c);`（从右边找过来）
+
+	+ 返回NULL表示没有找到
+
+	+ 代码如下：
+
+		```c
+		#include <stdio.h>
+		#include <string.h>
+		int main(void)
+		{
+			char s[]="hello";
+			char *p=strchr(s,'l');
+			p=strchr(p+1,'l');
+			printf("%s",p);
+			return 0;
+		}
+		```
+
+		截断后面的字符只要前面的字符：
+
+		```c
+		#include <stdio.h>
+		#include <string.h>
+		#include <stdlib.h>
+		
+		int main(void)
+		{
+		    char s[] = "hello";
+		    
+		    char *p = strchr(s, 'l'); 
+		 
+		    if (p != NULL) {
+		        p = strchr(p + 1, 'l'); 
+		    }
+		    
+		    if (p != NULL) {
+		        *p = '\0'; 
+		    }
+		    
+		    size_t len = strlen(s);
+		    char *t = (char *)malloc(len + 1);
+		    
+		    if (t == NULL) {
+		        printf("内存分配失败！\n");
+		        return 1; 
+		    }
+		    
+		    strcpy(t, s);
+		    
+		    printf("截取后的字符串是：%s\n", t);
+		    
+		   
+		    free(t);
+		    t = NULL; 
+		    
+		    return 0;
+		}
+		```
+
++ **字符串中找字符串：**
+
+	+ `char *strstr(const char *s1,const char *s2);`（在字符串中寻找一个字符串的）
+
+	+ `char *strcasestr(const char *s1,const char *s2);`（在寻找的过程中忽略大小写）
+
+		对strstr的使用如下：
+		
+		```c
+		#include <stdio.h>
+		#include <string.h>
+		int main()
+		{
+			char s[]="hello world";
+			char *p=strstr(s,"world");
+			if(p!=NULL){
+				printf("找到了\n");
+				printf("位置偏移：%ld\n",p-s);
+				printf("从该位置开始的内容：%s\n",p);
+			}
+			else{
+				printf("没找到\n");
+			}
+			return 0; 
+		}
+		```
+
+### 八、自定义数据类型
+
+#### 1.枚举（11.1.1）
+
++ **常量符号化：**
+
+	用符号而不是具体数字来表示程序中的数字
+
++ **枚举：**
+
+	+ 用枚举而不是定义独立的const int变量
+
+	+ 枚举是一种用户定义的数据类型，它用关键字enum以如下语句来声明：
+
+		enum 枚举类型名字{名字1，名字2，……，名字n};
+
+	+ 枚举类型的名字通常并不真的使用，要用的是在大括号里的名字，因为它们就是常量符号，它们的类型是int,值则依次从0到n.
+
+		+ 如：enum colors{red,yellow,green};
+
+		+ 就创建了三个常量，red的值是0,yellow的值是1，green的值是2
+		+ 当需要一些可以排列起来的常量值时，定义枚举的意义就是给了这些常量值名字。
+
+		代码：
+
+		```c
+		#include <stdio.h>
+		enum color{red,yellow,green
+		};
+		
+		void f(enum color c);
+		
+		int main(void)
+		{
+			enum color t=red;
+			scanf("%d",&t);
+			f(t);
+			return 0;
+		}
+		void f(enum color c){
+			printf("%d",c);
+		}
+		```
+
+		由这个代码可以知道：
+
+		+ 枚举量可以作为值
+		+ 枚举类型可以跟上enum作为类型
+		+ 但是实际上是以整数来做内部计算和外部输出的
+
++ **自动计数枚举:**
+
+	+ 试用场景
+
+		1. 当需要数字代码（0，1，2）转换为人类看得懂的字符串（“red,yellow”）时
+		2. 当需要遍历所有枚举量，或者需要用枚举作为下标时
+		3. 当需要安全限制用户输入范围，避免每次手动修改数组长度时
+
+	+ 代码例子：
+
+		```c
+		// 1. 定义枚举，最后加一个计数哨兵（全大写或驼峰）
+		enum TYPE {A, B, C, NumTYPE}; 
+		
+		int main() {
+		    // 2. 建映射：用哨兵做数组长度，下标和枚举量一一对应
+		    char *Names[NumTYPE] = {"A", "B", "C"};
+		    
+		    // 3. 接收用户输入（用 int 接，不要用 enum 类型，避免非法输入）
+		    int input = -1;
+		    scanf("%d", &input);
+		    
+		    // 4. 边界检查（用哨兵做上限）
+		    if (input >= 0 && input < NumTYPE) {
+		        printf("结果：%s\n", Names[input]); // 直接用输入做下标
+		    } else {
+		        printf("未知输入\n");
+		    }
+		}
+		```
+
+		* **自动计数（哨兵）：** `NumTYPE` 没有实际业务含义，它是编译器自动推导出来的（等于 A, B, C 的总数）。它的作用是**以后增加新枚举量时，不需要手动改循环边界和数组长度**。
+		* **映射机制：** 枚举底层是 `int`。`A=0, B=1, C=2`。数组 `Names[0]="A"`。所以可以完美对应。
+		* **为什么 scanf 用 `int` 而不是 `enum TYPE`？** 因为 C 语言对枚举的类型检查很宽松，如果用 `enum TYPE` 接收 `scanf("%d")`，用户输入 99 会直接突破边界。用 `int` 接收 + `if` 判断，更安全
+
+	+ 踩坑和易错点：
+
+		* ❌ 错误：`scanf("%d", &enum_variable);` （C语言合法但逻辑危险，C++直接报错）。
+		* ❌ 错误：`Names[NumTYPE]` 越界。数组长度是 `NumTYPE`，下标只能是 `0` 到 `NumTYPE-1`。
+		* ✅ 正确：C语言中枚举量可以直接当整数用（`int a = red;` 合法），不需要强制转换
+
++ **枚举量**
+
+	+ 声明枚举量的时候可以指定值
+
+		enum COLOR{RED=1,YELLOW,GREEN=5};(这里的YELLOW是按顺序来的，为2)
+
++ **枚举只是int**
+
+	+ 即使给枚举类型的变量赋不存在的整数值也没有任何warning和error
+
+		
+
++ 虽然枚举类型可以当作类型使用，**但实际上很少用**
+
+	+ 如果有意义上排比的名字，用枚举比const int方便
+	+ 枚举比宏(macro)好，以为枚举有int类型
+
+#### 2.结构体（11.2.1~11.2.3）
+
++ **结构类型（11.2.1）：**
+
+	+ 声明结构类型：
+
+		![](../Saved Pictures/15.jpg)
+
+	+ **在函数内/外：**
+		+ 和本地变量一样，在函数内部声明的结构类型只能在函数内部使用
+		+ 所以通常在函数外部声明结构类型，这样就可以被**多个函数所使用了**
+
+	+ **声明结构的形式**
+
+		+ 第一种：
+
+			```c
+			struct point{
+				int x;
+				int y;
+			}
+			struct point p1,p2;
+			```
+
+			​	p1和p2都是point，里面有x和y的值
+
+		+ 第二种：
+
+			```c
+			struct{
+				int x;
+			    int y;
+			}p1,p2;
+			```
+
+			p1和p2都是一种无名结构，里面有x和y
+
+		+ 第三种：
+
+			```c
+			struct point{
+				int x;
+				int y;
+			}p1,p2;
+			```
+
+			p1和p2都是point，里面有x和y的值
+
+		+ 对于第一种和第三种形式，都声明了结构point，但是第二种形式没有声明point，只是定义了两个变量
+
+	+ **结构变量：**
+
+		![](../Saved Pictures/16.jpg)
+
+	+ **结构的初始化**
+
+		`struct date today={07,31,2014}`
+
+		`struct date thismonth = {.mouth=7,.year=2014}`(此时未被赋值的.day为0)
+
+	+ **结构成员**
+
+		+ 结构和数组有点像
+
+			1. 数组用[]运算符和下标访问其成员
+
+				a[0]=10;
+
+			2. 结构用.运算符和名字访问其成员
+
+				today.day
+
+		+ 代码示例：
+
+			```c
+			#include <stdio.h>
+			struct date{
+				int month;
+				int day;
+				int year;
+			};
+			int main()
+			{
+				struct date today,tomorrow;
+				scanf("%i %i %i",&today.month,&today.day,&today.year);//.的优先级高于&
+				printf("%i-%i-%i\n",today.year,today.month,today.day);
+				return 0;
+			}
+			```
+
+			
+
+	+ **结构运算**
+
+		+ 要访问整个结构，直接用结构变量的名字
+
+		+ 对于整个结构，可以做赋值、取地址，也可以传递给函数参数
+
+			p1=(struct point){5,10};//相当于p1.x=5;p1.y=10;
+
+			p1=p2;//相当于p1.x=p2.x;p1.y=p2.y;(数组无法做这两种运算)
+
+	+ **结构指针：**
+
+		+ 和数组不同，结构变量的名字并不是结构变量的地址，必须使用&运算符
+		+ `struct date *pDate = &today;`
+
++ **结构与函数（11.2.2）**
+
+	+ 结构作为函数参数
+
+		+ ·`int numberOfDays(struct date d)`
+
+		+ 整个结构可以作为参数的值传入函数
+
+		+ 这时候是在函数内新建一个结构变量，并复制调用者的结构的值
+
+		+ 也可以返回一个结构
+
+		+ 这与数组完全不同
+
+		+ 代码示例：（告诉某一天的年月日，算每天的年月日）
+
+			```c
+			#include <stdio.h>
+			#include <stdbool.h>
+			#include <stdlib.h>
+			
+			struct date{
+				int month;
+				int day;
+				int year;
+			};
+			
+			int numberOfDays(struct date d);
+			bool isleap(struct date d);
+			
+			int main()
+			{
+				struct date today,tomorrow;
+				scanf("%i %i %i",&today.month,&today.day,&today.year);
+				
+				if(today.day != numberOfDays(today)){
+					tomorrow.day = today.day + 1;
+					tomorrow.month = today.month;
+					tomorrow.year = today.year ;	
+				}
+				else if(today.month == 12){
+					tomorrow.day = 1 ;
+					tomorrow.month = 1 ;
+					tomorrow.year = today.year + 1 ;
+				}
+				else{
+					tomorrow.day = 1;
+					tomorrow.month = today.month+1;
+					tomorrow.year = today.year ;
+				}
+				printf("%i-%i-%i",tomorrow.year,tomorrow.month ,tomorrow.day  );
+				return 0;
+			}
+			
+			
+			int numberOfDays(struct date d){
+				
+				int days;
+				const int a[12]={31,28,31,30,31,30,31,31,30,31,30,31};
+				if(d.month == 2 && isleap(d)){
+					days = 29;
+				}
+				else
+					days=a[d.month - 1];
+				return days;
+				
+			}
+			
+			bool isleap(struct date d){
+				bool leap =  false;
+				if(d.year % 400==0||(d.year % 4==0&&d.year %100 !=0)){
+					leap = true;
+				}
+				return leap;
+			}
+			```
+
+	+ 输入结构
+
+		+ 没有直接的方式可以一次scanf输入一个结构
+
+		+ ```c
+			#include <stdio.h>
+			
+			struct point{
+				int x;
+				int y;
+			};
+			
+			void getStruct(struct point p);
+			void output(struct point p);
+			
+			int main()
+			{
+				struct point y={0,0};
+				getStruct(y);
+				output(y);
+				return 0;
+			}
+			
+			void getStruct(struct point p)	
+			{
+				scanf("%d",&p.x);
+				scanf("%d",&p.y);
+				printf("%d %d\n",p.x ,p.y );
+			}
+			void output(struct point p)
+			{
+				printf("%d %d\n",p.x,p.y);
+			}
+			//12 3
+			//12 3
+			//0 0
+			
+			```
+
+			上面代码告诉外面**C语言中，将结构体作为函数参数传递时，是“值传递”（复制一份），而不是直接操作原变量。**
+
+			所以函数中的p和main中的y是不同的
+
+			在函数读入了p的数值之后，没有任何东西回到main,所以y还是{0,0}
+
+		+ 那如何将读入的结构送回来呢
+
+			1. 将`void getStruct(struct point p);`改为`struct point getStruct(void);`并在函数中返回一个结构
+
+				代码如下：
+
+				```c
+				#include <stdio.h>
+				
+				struct point{
+					int x;
+					int y;
+				};
+				
+				struct point getStruct(void);//进行了修改
+				void output(struct point p);
+				
+				int main()
+				{
+					struct point y={0,0};
+					y=getStruct();//进行了修改
+					output(y);
+					return 0;
+				}
+				
+				struct point getStruct(void)//进行了修改
+				{
+					struct point p;//进行了修改
+					scanf("%d",&p.x);
+					scanf("%d",&p.y);
+					printf("%d %d\n",p.x ,p.y );
+					return p;//进行了修改
+				}
+				void output(struct point p)
+				{
+					printf("%d %d\n",p.x,p.y);
+				}
+				//12 3
+				//12 3
+				//12 3
+				```
+
+			2. 结构指针作为参数：（更为有效的方法）
+
+				有两种表示指针所指的结构变量中的成员
+
+				```c
+				struct date{
+				    int month;
+				    int day;
+				    int year;
+				}myday;
+				
+				struct date *p=&myday;
+				(*p).month = 12;//第一种
+				p->month = 12;//第二种
+				```
+
+				**`->` 运算符本身就自带了“解引用”的功能**（所以输出的时候不能写成`printf("%d",*p->x)`）
+
+			3. ==**代码示例：**==
+
+				```c
+				#include <stdio.h>
+				#include <stdlib.h>
+				
+				struct point{
+					int x;
+					int y;
+				};
+				
+				struct point *getStruct (struct point *p);
+				void output(struct point p);
+				
+				int main()
+				{
+					struct point y={0,0};
+					getStruct(&y);//忽略返回值，单纯利用函数内的scanf给y复制。 
+					output(y);
+					output(*getStruct(&y));
+					print(getStruct(&y));
+					getStruct(&y)->x=0;
+					printf("%d %d",y.x,y.y);
+					*getStruct(&y)=(struct point){1,2};
+					printf("%d %d",y.x,y.y);
+					return 0;
+				}
+				
+				struct point* getStruct (struct point *p)
+				{
+					scanf("%d",&p->x);
+					scanf("%d",&p->y);
+					printf("%d %d\n",p->x ,p->y ); 
+					return p;
+				}
+				void output(struct point p)
+				{
+					printf("%d %d\n",p.x,p.y);
+				}
+				void print(const struct point *p)
+				{
+					printf("%d %d",p->x,p->y);
+				}
+				```
+
+				+ `output(*getStruct(&y));`
+
+					+ **执行过程**：
+
+						1. 先执行 `getStruct(&y)`，这会让用户输入 `x, y`，并且函数返回指针 `p`（也就是 `&y`）。
+						2. 紧接着前面的 `*` 号，对这个返回的指针==**解引用**==（`*p`），得到整个==结构体本身==。
+
+						3. 把这个结构体作为参数，传给 `output` 函数打印。
+
+					* **结果**：输入一次，打印一次。
+
+				+ `print(getStruct(&y));`
+
+					* **执行过程**：
+						1. 执行 `getStruct(&y)`，又要求用户输入一次 `x, y`。返回指针 `p`。
+						2. 直接把指针 `p` 作为参数传给 `print` 函数（因为 `print` 需要的参数就是指针）。
+					* **结果**：输入一次，打印一次。
+
+				+ `getStruct(&y)->x = 0;` ← **重点！**
+
+					* **执行过程**：
+						1. 执行 `getStruct(&y)`，又要求用户输入一次。
+						2. 函数返回指针 `p`（即 `&y`）。
+						3. 紧接着用 `->x` 直接访问结构体成员。
+						4. 把它的 `x` 赋值为 0。
+					* **语法解释**：`->` 的优先级非常高，所以 `getStruct(&y)->x` 就相当于 `(*getStruct(&y)).x`。
+					* **意义**：这句话完美地证明了，**函数返回的指针可以直接用来修改原结构体的值**，不需要额外定义一个指针变量去接。
+
+				+ `*getStruct(&y) = (struct point){1, 2};`
+
+					* **执行过程**：
+						1. 执行 `getStruct(&y)`，再次要求用户输入。
+						2. 函数返回指针 `p`。
+						3. 用 `*` 解引用，得到结构体 `y` 本身。
+						4. 将右侧的复合字面量 `(struct point){1, 2}` 整体赋值给 `y`。
+
++ **结构中的结构（11.2.3）**
+
+	+ **结构数组：**
+
+		`struct date dates[100];`
+
+		`struct date dates[]={{4,5,2005},{2,4,2005}};`
+
+	+ **结构中的结构：**
+
+		```c
+		struct dateAndTime{
+		    struct date sdate;
+		    struct date stime;
+		};
+		```
+
+		![](../Saved Pictures/17.jpg)
+
+	+  **结构中的结构的数组：**
+
+		![](../Saved Pictures/18.jpg)
+
+#### 3.类型定义（11.3.1）
+
++ **typedef**
+
+	+ ![](../Saved Pictures/19.jpg)
+	+ 让原本冗长、难写的类型名字变得简单（给结构体起别名）
+	+ ![](../Saved Pictures/20.jpg)
+	+ typedef 已有的类型名 新的类型别名
+
+	+ ```c
+		typedef struct point{
+			int month;
+			int day;
+			int year;
+		}Date;//Date去代指struct point
+		```
+
+		**给指针起别名的时候一定要用typedef,绝不要用#define**
+
++ **typedef的进阶用法：**
+
+	+ 给数组起别名：
+
+		```c
+		//一维数组
+		typedef int Arr[10];//Arr代表一个长度为10的int的数组
+		Arr a;//等价与int a[10];
+		Arr b;//等价于int b[10];
+		
+		//二维数组
+		typedef int Arr[10][10];
+		Arr m1;//等价于int m1[10][10];
+		Arr m2;//等价于int m2[10][10];
+		```
+
+	+ 给函数指针起别名：
+
+		```c
+		typedef int (*FuncPtr)(int,int);//给函数指针起别名叫FuncPtr
+		FuncPtr f=add;//直接用别名声明函数指针
+		```
+
+	+ 举例说明：
+
+		```c
+		int add(int a, int b) { return a + b; }
+		int sub(int a, int b) { return a - b; }
+		int mul(int a, int b) { return a * b; }
+		
+		int main() {
+		    int op = 1;
+		    int a = 5, b = 3;
+		    int result = 0;
+		
+		    // 传统的 if-else / switch 写法
+		    if (op == 1) {
+		        result = add(a, b);
+		    } else if (op == 2) {
+		        result = sub(a, b);
+		    } else if (op == 3) {
+		        result = mul(a, b);
+		    }
+		    printf("%d\n", result);
+		    return 0;
+		}
+		```
+
+		既然 `add`、`sub`、`mul` 都长一个样（接收两个 `int`，返回 `int`），那我们能不能定义一个**“统一规格”的指针**，谁符合这个规格，就能指向谁？
+
+		则就用到了给函数指针起别名：
+
+		```c
+		// 1. 定义别名（代表“接收两个int，返回int”的函数指针）
+		typedef int (*FuncPtr)(int, int); 
+		
+		// 2. 准备三个普通函数
+		int add(int a, int b) { return a + b; }
+		int sub(int a, int b) { return a - b; }
+		int mul(int a, int b) { return a * b; }
+		
+		int main() {
+		    FuncPtr p; // 声明一个函数指针 p
+		
+		    int choice = 1;
+		    int a = 5, b = 3;
+		
+		    // 3. 根据选择，让遥控器 p 指向不同的函数
+		    if (choice == 1) p = add;
+		    else if (choice == 2) p = sub;
+		    else p = mul;
+		
+		    // 4. 通过指针调用（相当于执行了对应的函数）
+		    int result = p(a, b); 
+		    
+		    printf("%d\n", result); // 输出 8
+		    return 0;
+		}
+		```
+
+		**p是指针（有*p），它指向一个函数，这个函数接受（int,int),返回int**
+
+		+ 以下两种方式完全等价：
+
+			```c
+			#include <stdio.h>
+			#include <stdlib.h>
+			typedef int (*p) (int,int);
+			int add(int a,int b)
+			{
+				return a+b;
+			}
+			int main()
+			{
+				p p1=add;
+				int result=p1(3,5);
+				printf("%d",result);
+				return 0;
+			 } 
+			```
+
+			
+
+			```c
+			#include <stdio.h>
+			#include <stdlib.h>
+			
+			int add(int a,int b)
+			{
+				return a+b;
+			}
+			int main()
+			{
+				int (*p)(int,int)=add;
+				int result=p(3,5);
+				printf("%d",result);
+				return 0;
+			 } 
+			```
+
+#### 4.联合（11.3.2）
+
++ **union**
+
+	+ 和struct在形式上很像
+
+	```c
+	union AnElt {
+		int i;
+	    char c;
+	}elt1,elt2;
+	
+	elt1.i=4;
+	elt2.c='a';
+	elt2.i=ahdqiwhqof;
+	```
+
+	+ 特点：
+
+		1. 和所有成员共用同一块起始地址
+
+		2. 内存大小等于最大成员的大小（如上面的代码union占4字节，因为int最大）
+
+		3. 同一时间只能由一个成员有效
+
+		4. 下面代码说明这个特点：
+
+			```c
+			#include <stdio.h>
+			#include <stdlib.h>
+			
+			union Data{
+				int i;
+				float f;
+				char c;
+			};
+			
+			int main()
+			{
+				union Data d;
+				d.i=65;
+				printf("d.i=%d\n",d.i);
+				printf("d.f=%d\n",d.f);
+				printf("d.c=%c\n",d.c);
+				
+				d.f=3.14;
+				printf("d.f=%f\n",d.f);
+				printf("d.i=%d\n",d.i);
+				return 0; 
+			}
+			//d.i=65
+			//d.f=0(写进去一个int类型的，用float去读，编译器不会把他转换，而会原封不动的把这串二进制的强行解释成浮点数)
+			//d.c=A(由于'A'在ASCll中的值为65)
+			//d.f=3.140000
+			//d.i=1078523331(乱码)
+			
+			```
+
+		5. **`Union实战：打印变量的十六进制内存`**
+
+			代码：
+
+			```c
+			#include <stdio.h>
+			#include <stdlib.h>
+			
+			typedef union Data{
+				int i;
+				unsigned char ch[sizeof(int)];
+			}a;
+			
+			int main()
+			{
+				a d;
+				d.i=1234;
+				for(int i=0;i<sizeof(int);i++){
+					printf("%02hhX\n",d.ch[i]);
+				}
+				return 0;
+			}
+			//D2
+			//04
+			//00
+			//00
+			//实际应该是：00 00 04 D2
+			```
+
+			注意：Union共享内存 + **小端序**（低地址放低位）
+
+### 九、程序结构
+
+#### 1.全局变量（12.1.1）
+
++ **全局变量的概念：**
+
+	+ 定义在函数外面的变量是全局变量
+
+	+ 全局变量具有全局的生存期和作用域
+
+	+ 它们与任何函数都无关
+
+	+ 在任何函数内部都可以使用它们
+
+		如下面代码：
+
+		```c
+		#include <stdio.h>
+		
+		int a=12;
+		
+		void f(void);
+		
+		int main()
+		{
+			printf("a=%d\n",a);
+			f();
+			printf("a=%d\n",a);
+		}
+		
+		void f(void)
+		{
+			printf("a=%d\n",a);
+			a+=2;
+			printf("a=%d\n",a);
+		}
+		//a=12
+		//a=12
+		//a=14
+		//a=14
+		```
+
++ **全局变量初始化**
+
+	+ 没有做初始化的全局变量会得到0值
+
+	+ 指针会得到NULL值
+
+	+ 只能要编译时刻已知的值来初始化全局变量
+
+		+ 你**不能用函数调用、局部变量、或者需要运行时才能算出来的表达式**去初始化它。只能用**常量**（如 `10`、`3.14`、`'A'`）或者**常量表达式**（如 `10 + 20`）
+
+		+ `int a = 100; `         // ✅ 字面常量
+			`int b = 5 + 3;    `    // ✅ 编译期就能算出来的常量表达式
+			`int c = sizeof(int);  ` // ✅ sizeof 是编译期计算的
+
+		+ 特殊情况**(不建议)**，如果定义的全局变量是const 则有时候可以有：
+
+			```c++
+			const int a=1;
+			int b=a;
+			```
+
+			
+
+	+ 它们的初始化发生在main函数之前
+
+		**当程序刚刚加载进内存、还没来得及执行 `main` 的第一行代码时，`a` 就已经是 12 了**
+
++ **被隐藏的全局变量**
+
+	+ 如果函数内部存在与全局变量同名的变量，则全局变量被隐藏
+
+		+ ```c
+			#include <stdio.h>
+			
+			int a=12;
+			
+			void f(void);
+			
+			int main()
+			{
+				printf("a=%d\n",a);
+				f();
+				printf("a=%d\n",a);
+			}
+			
+			void f(void)
+			{
+				int a=1;
+				printf("a=%d\n",a);
+				a+=2;
+				printf("a=%d\n",a);
+			}
+			//a=12
+			//a=1
+			//a=3
+			//a=12
+			```
+
+#### 2.静态本地变量（12.1.2）
+
++ **static==（静态全局变量：全局的生存期，本地的作用域）==**
+
+	+ 在本地变量定义时加上static修饰符就成为静态本地变量
+
+	+ 当函数离开的时候，静态本地变量会继续存在并保持其值
+
+	+ 静态本地变量的初始化只会在第一次进入这个函数时做，以后进入函数时会保持上次离开时的值
+
+	+ static在这里的意思时局部作用域（本地可访问）
+
+		+ **作用域**：和普通局部变量一样，**只能在定义它的函数内部使用**。出了这个函数，外面谁也看不见它。
+
+		+ **生命周期**：和全局变量一样，**从程序启动到程序结束一直存在**。不会因为函数退出而销毁。
+
+		+ **初始化**：和全局变量一样，**只初始化一次，且默认值为 0**。如果写了 `static int a = 10;`，这句赋值只在第一次进入函数时执行，之后你再进这个函数，它不会再被重置为 10。
+
+		+ ```c
+			#include <stdio.h>
+			
+			int b=1;
+			
+			void f(void);
+			int main()
+			{
+				f();
+				return 0;
+			}
+			
+			void f(void)
+			{	
+				int i,j;
+				static int a=1;
+				printf("&a=%p\n",&a);
+				printf("&b=%p\n",&b);
+				printf("&i=%p\n",&i);
+				printf("&j=%p\n",&j);
+			}
+			//&a=0000000000403014
+			//&b=0000000000403010
+			//&i=000000000062FDEC
+			//&j=000000000062FDE8
+			```
+
+			可以看到静态本地变量和全局变量的地址相差4（刚好一个int）,然后两个本地变量也挨在一块，但与这两个相差十万八千里
+
+#### 3.返回指针的函数（12.1.3）
+
++ **返回本地变量的地址是危险的**
+
+	+ ```c
+		#include <stdio.h>
+		#include <stdlib.h>
+		
+		int *f(void);
+		int *g(void);
+		
+		int main()
+		{
+			int *q=f();
+			printf("%d\n",*q);
+			printf("%p\n",q);
+			g();
+			printf("%d\n",*q);
+			printf("%p\n",q);
+			printf("%d\n",*q);
+			printf("%p\n",q);
+			return 0;
+		}
+		
+		int *f(void)
+		{
+			int a=1;
+			printf("%p\n",&a);
+			return &a;
+			
+		}
+		int *g(void)
+		{
+			int b=2;
+			printf("%p\n",&b);
+			return &b;
+		}
+		//000000000062FDDC
+		//1
+		//000000000062FDDC
+		//000000000062FDDC
+		//2
+		//000000000062FDDC
+		//0
+		//000000000062FDDC
+		```
+
+	+ **`f()` 和 `g()` 函数里的局部变量，用的是同一个物理内存地址！**
+
++ **返回全局变量或静态本地变量的地址是安全的**
+
+	比如把上面代码`int a=1`变为`static int a=1`**（返回静态本地变量的地址）**
+
+	则有：
+
+	```c
+	#include <stdio.h>
+	#include <stdlib.h>
+	
+	int *f(void);
+	int *g(void);
+	
+	int main()
+	{
+		int *q=f();
+		printf("%d\n",*q);
+		printf("%p\n",q);
+		g();
+		printf("%d\n",*q);
+		printf("%p\n",q);	
+		return 0;
+	}
+	
+	int *f(void)
+	{
+		static int a=1;
+		printf("%p\n",&a);
+		return &a;
+		
+	}
+	int *g(void)
+	{
+		int b=2;
+		printf("%p\n",&b);
+		return &b;
+	}
+	//0000000000403010
+	//1
+	//0000000000403010
+	//000000000062FDDC
+	//1
+	//00000000004030
+	```
+
+	**注意：**虽然合法，但**不安全**。因为全局只有一份 `a`，如果多个地方同时调用这个函数，大家拿到的都是同一个地址。你改了它，别人读到的也就变了。这叫“破坏了函数的独立性”
+
+	返回全局变量的地址：
+
+	```c
+	#include <stdio.h>
+	
+	int global_val = 100; // 全局变量
+	
+	int *f(void) {
+	    return &global_val; // 安全：返回全局变量的地址
+	}
+	
+	int main() {
+	    int *p = f();
+	    printf("%d\n", *p); // 输出 100
+	    *p = 200;           // 通过指针修改全局变量
+	    printf("%d\n", global_val); // 输出 200
+	    return 0;
+	}
+	```
+
+	
+
++ 返回在函数内malloc的内存是安全的，但是容易造成问题
+
++ 最好的做法是可以返回指向传入参数的指针（指针透传）
+
+	```c
+	int *f(int *arr) {
+	    // 对 arr 做一些操作...
+	    return arr; // ✅ 安全
+	}
+	```
+
++ **tips**
+	+ 不要使用全局变量来在函数间传递参数和结果
+	+ 尽量避免使用全局变量
+
+#### 4.宏定义（12.2.1）
+
++ **编译预处理指令**
+
+	+ #开头的是编译预处理指令
+	+ 它们不是C语言的成分，但是C语言程序离不开它们
+	+ #define用来定义一个宏
+
++ **define**
+
+	+ 先前的`const int PI=3.14159;`就可以变成`#define PI 3.14159`   (注意没有分号)
+
+	+ #define <名字><值>
+
+	+ 注意没有结尾的分号，因为不是C的语句
+
+	+ 在C语言的编译器开始编译之前，编译预处理程序（cpp）会把程序的名字换成值
+
+	+ 完全的文本替代
+
+		```c
+		#include <stdio.h>
+		#define A printf("%d\n",a);
+		
+		void f(void);
+		
+		int main()
+		{
+			int a=1;
+			A;
+			f();
+			return 0;
+		}
+		void f(void)
+		{
+			int a=2;
+			A;
+		}
+		//1
+		//2
+		```
+
++ **宏**
+
+	+ 如果一个宏的值中有其他的宏的名字，也是会被替换的
+
+		```c
+		#include <stdio.h>
+		#include <stdlib.h>
+		#define PI 3.14159
+		#define PI2 2*PI
+		#define FORMAT "%f\n"
+		
+		int main()
+		{
+			printf(FORMAT,PI2*3.0);//相当与printf("%f\n",2*3.14150*3.0); 
+			return 0;
+		}
+		```
+
+		
+
+	+ 如果一个宏的值超过一行，最后一行之前的行末需要加\
+
+		```c
+		#define PRT printf("%f\n",PI);\
+					printf("%f\n",PI2)
+		```
+
+		
+
+	+ 宏的值后面出现的注释不会被当作宏的值的一部分
+
++ **没有值的宏**
+
+	+ `#define _DEBUG`
+	+ 这类宏是用于条件编译的，后面有其他的编译预处理指令来检查这个宏是否已经被定义过了
+
++ **预定义的宏(编译器自带)**
+
+	+ `__LINE__`、`__FILE__`、`__DATE__`、`__TIME__`
+
+		```c
+		#include <stdio.h>
+		
+		int main() {
+		    // 注意：前后都是两个下划线！
+		    printf("当前代码所在行号：%d\n", __LINE__);
+		    printf("当前源文件名：%s\n", __FILE__);
+		    printf("程序编译日期：%s\n", __DATE__);
+		    printf("程序编译时间：%s\n", __TIME__);
+		    
+		    return 0;
+		}
+		```
+
+		* **`__LINE__`**：替换成一个整数，代表当前代码所在的行数。你如果把 `printf` 往下挪一行，数字就变了。
+		* **`__FILE__`**：替换成一个字符串，代表当前源文件的文件名。
+		* **`__DATE__` 和 `__TIME__`**：替换成程序**被编译那一刻**的日期和时间字符串（不是运行时间！）。
+
+	+ `__func__`
+
+		```c
+		void test() {
+		    printf("我现在在函数：%s 里面\n", __func__); // 输出 test
+		}
+		```
+
+	+ `__STDC__`
+
+		**用来判断当前的编译器是否符合 ANSI C（标准 C）规范。**
+
+		```c
+		#include <stdio.h>
+		
+		int main() {
+		    #ifdef __STDC__
+		        printf("这是一个符合标准 C 的编译器，值为：%d\n", __STDC__);
+		    #else
+		        printf("这不是标准 C 编译器，或者没定义这个宏。\n");
+		    #endif
+		    return 0;
+		}
+		//这是一个符合标准 C 的编译器，值为：1。
+		```
+
+	+ 这些可以用来检查到底是哪个文件、哪一行、哪个函数出错了
+
+		```c
+		printf("【调试】文件：%s，函数：%s，行号：%d\n", __FILE__, __func__, __LINE__);
+		```
+
+#### 5.带参数的宏（12.2.2）
+
++ **像函数的宏**
+
+	+ #define cube(x) ((x)*(x)\*(x))
+
+	+ 宏可以带参数
+
+	+ ```c
+		#include <stdio.h>
+		#define cube(x) ((x)*(x)*(x))
+		
+		int main()
+		{	
+			double i;
+			scanf("%lf",&i);
+			printf("%f",cube(i));
+			return 0;
+		 } 
+		```
+
++ **错误定义的宏**
+
+	+ ```c
+		#include <stdio.h>
+		#define RADTODEG1(x) (x*57.29578)
+		#define RADTODEG2(x) (x)*57.29578
+		
+		int main()
+		{
+			printf("%f\n",RADTODEG1(5+2));
+			printf("%f\n",RADTODEG2(1));
+			return 0;	
+		}
+		
+		//119.5915609(第一个是5+2*57.29578)
+		//57.295780(第二个是180/(1)*57,29578)
+		```
+
++ **带参数的宏的原则**
+
+	+ 一切都要括号
+	+ 整个值要括号
+	+ 参数出现的每个地方都要括号
+	+ `#define RADTODEG(x) ((x)*57,29578)`
+
++ **带参数的宏**
+
+	+ 可以带多个参数
+
+	+ `define MIN(a,b) ((a)>(b)?(b):(a))`
+
+		```c
+		#include <stdio.h>
+		#define min(a,b) (((a)<(b))?(a):(b))
+		#define max(a,b) (((a)>(b))?(a):(b))
+		
+		int main()
+		{
+			int i,j,k,l;
+			scanf("%d %d %d %d",&i,&j,&k,&l);
+			printf("%d\n",min(min(i,j),min(k,l)));
+			printf("%d\n",max(max(i,j),max(k,l)));
+			return 0;
+		}
+		```
+
+		
+
+	+ 也可以组合（嵌套）使用其他宏
+
+	+ 不要在定义宏的时候不要在结尾加分号
+
++ **#和##**
+
+	+ 宏里的 `#` 和 `##` 是 C 语言预处理器中两个非常有用的运算符，它们一个负责**把参数变成字符串**，另一个负责**把两个符号粘在一起**。
+
+	+ `#` 运算符的作用，是把它后面的宏参数**原封不动地转换成一个字符串字面量**。
+
+		它的一个关键特点是：**它不会先展开参数，而是直接取参数的“字面文本**
+
+		```c
+		#include <stdio.h>
+		
+		#define PRINT_EXPR(x) printf(#x " = %d\n", x)
+		
+		int main() {
+		    int a = 5;
+		    PRINT_EXPR(a);        // 会展开为 printf("a" " = %d\n", a);
+		    PRINT_EXPR(1 + 2);    // 会展开为 printf("1 + 2" " = %d\n", 1 + 2);
+		    return 0;
+		}
+		```
+
+	+ `##` 运算符的作用，是把它左右两边的两个符号（Token）**合并成一个符号**。
+
+		一个常见的用途是**根据宏参数自动生成函数名或变量名**。例如，你可以用 `##` 来构造一个根据命令名自动生成对应函数名的宏
+
+		```c
+		#include <stdio.h>
+		#define b(x) #x
+		#define a(x,y) b(x##y)
+		int main()
+		{
+			printf("%s",a(pri,ntf));
+			return 0;
+		}
+		```
+
++ **static inline**
+
+	+ **把短的宏函数改成 `static inline` 函数，放在 `.c` 或头文件里，调用方式和普通函数一样。**
+		它比宏安全，效率又接近宏，是现代 C 里替代短小宏的推荐做法。
+
+	+ 什么时候用 `static inline`？
+
+		适合：
+
+		* 函数很短，比如一两行；
+		* 频繁调用，想省掉函数调用开销；
+		* 原来用宏实现，但希望更安全。
+
+		不适合：
+
+		* 函数很大；
+		* 递归函数；
+		* 需要取函数地址；
+		* 函数里有复杂逻辑。
+
+		这些情况下编译器通常不会内联，写了 `inline` 也没用。
+
+	+ 代码示例：
+
+		```c
+		#include <stdio.h>
+		
+		static inline int max(int a,int b)
+		{
+			return a>b ?a :b;
+		}
+		
+		static inline int min(int a,int b)
+		{
+			return a<b ?a :b; 
+		}
+		
+		int main(void)
+		{
+			int i,j;
+			scanf("%d %d",&i,&j);
+			printf("%d\n",max(i,j));
+			printf("%d\n",min(i,j));
+			return 0;
+		}
+		```
+
++ ## **条件编译**
+
+	条件编译允许你根据某些条件，决定一段代码是否参与编译。最常用的指令组合是 `#if`、`#ifdef`、`#ifndef` 与 `#endif`。
+
+	* **`#ifdef` 与 `#ifndef`**：这两个指令用于检查一个宏是否**被定义**。
+		* `#ifdef`：如果宏**已定义**，则编译其后的代码块。
+		* `#ifndef`：如果宏**未定义**，则编译其后的代码块。它常被用来防止头文件被重复包含。
+	* **`#if`**：这个指令更强大，它后面可以跟一个常量表达式。如果表达式的值非零，则编译其后的代码块。
+	* **`#else` 与 `#elif`**：它们可以配合 `#if`、`#ifdef` 或 `#ifndef` 使用，提供多个分支选择。`#elif` 相当于“else if”。
+	* **`#endif`**：用于结束一个条件编译块。每个 `#if`、`#ifdef` 或 `#ifndef` 都必须有对应的 `#endif`。
+
+	一个常见的用法是，通过定义不同的宏来切换调试代码：
+
+	```c
+	#define DEBUG 1 // 定义 DEBUG 宏，开启调试模式
+	
+	#if DEBUG
+	    printf("Debug: x = %d\n", x); // 条件为真，编译此代码
+	#else
+	    // 否则不编译上面的调试代码
+	#endif
+	```
+
++ ### `#error` 指令
+
+`#error` 指令的作用是在**编译时**主动产生一条错误信息，并**终止编译过程**。
+
+它的典型用法是放在条件编译的 `#else` 或 `#elif` 分支里，用于检查一些必须满足的条件，如果条件不满足，就给出清晰的错误提示。例如，检查编译器是否支持 C++：
+
+```c
+#if !defined(__cplusplus)
+#error "需要 C++ 编译器才能编译此文件"
+#endif
+```
+
+另一个常见的场景是检查宏定义的值是否符合要求：
+
+```c
+#define BUFFER_SIZE 100
+
+#if BUFFER_SIZE < 256
+#error "BUFFER_SIZE 太小了，必须大于等于 256"
+#endif
+```
+
+`#error` 的特点是：
+
+* 它是**你主动写的**，用来检查某些条件是否满足。
+* 错误信息是你自己定的，可以写得很清楚。
+* 它发生在预处理阶段，比编译器语法检查还早。
+* 它不会产生“卡死”，只会让编译失败并显示你写的文字。
+
+#### 6.多个源代码文件（12.3.1）
+
++ **当程序变大时，需要学会用“分而治之”的思路来管理代码，而C语言通过“编译单元”和“项目”的机制来支持这种管理方式**
+
+	![](../Saved Pictures/22.jpg)
+
++ **为什么要分成多个文件？**
+
+	当一个程序的所有代码都堆在一个 `.c` 文件里时，会变得难以阅读和维护。
+
+	* **代码组织**：将一个庞大的 `main.c` 文件，按照功能拆分成多个独立的 `.c` 文件（例如，一个文件专门放数学函数，另一个文件专门放字符串处理函数），逻辑更清晰。
+	* **便于协作**：在团队开发中，不同的开发者可以负责不同的 `.c` 文件，互不干扰，提高开发效率。
+	* **模块化与复用**：拆分出来的 `.c` 文件（模块）可以在不同的项目中复用，体现了模块化编程的思想。
+
++ **每一个 `.c` 文件就是一个“编译单元”**，编译器在编译时，一次只处理一个编译单元。
+
+	![](../Saved Pictures/21.jpg)
+
+#### 7.头文件（12.3.2）
+
++ ![](../Saved Pictures/23.jpg)
+
++ ### 头文件是干什么的
+
+  ![](../Saved Pictures/26.jpg)
+
+  多个 `.c` 文件要一起干活，但编译器一次只编译一个 `.c` 文件。
+  比如 `main.c` 里想调用 `max.c` 里的 `max` 函数，编译 `main.c` 的时候，编译器根本不知道 `max` 长什么样，参数几个、返回什么类型，全不知道。
+
+  这时候头文件就出场了：
+  **头文件把函数声明、宏、类型这些东西集中放起来，别的 `.c` 文件只要 `#include` 一下，就相当于把这些声明抄了一遍。**
+  编译器看到声明，就知道有这么个函数，参数和返回值是什么，就能顺利编译。
+  至于函数具体怎么实现的，在另一个 `.c` 文件里，链接的时候再去找。
+
++ ### 头文件里通常写什么
+
+  * **函数声明**（函数原型）
+  	比如：`int max(int a, int b);`
+  	只写声明，不写函数体。
+  * **宏定义**
+  	比如：`#define MAX_SIZE 100`
+  * **类型定义**
+  	比如：`struct Student { ... };`、`typedef int ElementType;`
+  * **外部变量声明**
+  	比如：`extern int count;`
+  	注意是 `extern`，只是声明，不是定义。
+  * **其他头文件**
+  	如果头文件里用到了别的类型，也可以把对应的头文件包含进来。
+
++ ### #include的误区
+
+  + ![](../Saved Pictures/27.jpg)
+
++ ### 头文件里不该写什么
+
+  * **函数定义**
+  	除非是 `static inline`，否则不要把头文件里写函数体。
+  	因为多个 `.c` 文件都包含这个头文件，函数就会被定义多次，链接时报重复定义。
+  * **全局变量定义**
+  	比如 `int count = 0;` 不要放头文件。
+  	多个 `.c` 包含后，每个编译单元都有一个 `count`，链接时冲突。
+  	要放就放 `extern int count;`，然后在某一个 `.c` 里定义 `int count = 0;`。
+
++ ### `#include` 的两种写法
+
+	* `#include <stdio.h>`
+		尖括号，找系统头文件，编译器去系统目录里找。
+	* `#include "max.h"`
+		双引号，找自己写的头文件，通常先在当前目录找，找不到再去系统目录。
+
+	自己写的头文件用双引号，系统自带的用尖括号。
+
+	+ ![](../Saved Pictures/24.jpg)
+
+#### 8.声明（12.3.3）
+
++ ![](../Saved Pictures/25.jpg)
+
++ `int i;`是变量的定义
+
++ `extern int i;`是变量的声明
+
++ 声明和定义	
+
+	+ ![](../Saved Pictures/26.jpg)
+
++ **多文件共享全局变量**
+
+	一个 `.c` 文件里定义了全局变量，别的 `.c` 文件想用，不能直接写 `int gAll;`，否则会重复定义。
+
+	正确做法：
+
+	* 在**某一个 `.c` 文件**里定义：`int gAll = 12;`
+	* 在**头文件**里用 `extern` 声明：`extern int gAll;`
+	* 其他 `.c` 文件包含这个头文件，就能用了。
+
++ **`extern` 是什么**
+
+	* `extern int gAll;` 是**声明**，不是定义。
+	* 它告诉编译器：“有个 int 叫 gAll，在别的文件里定义了，链接时去找。”
+	* 它不分配内存。
+	* 一个变量只能定义一次，但可以声明多次
+
++ **max.h**
+
+	```c
+	#ifndef MAX_H
+	#define MAX_H
+	
+	double max(double a, double b);
+	extern int gAll;
+	
+	#endif
+	```
+
+	**为了避免重复声明**
+
+	![](../Saved Pictures/火影.jpg)
+
+	
+
+	**max.c**
+
+	```c
+	#include "max.h"
+	
+	int gAll = 12;          // 定义，分配内存
+	
+	double max(double a, double b)
+	{
+	    return a > b ? a : b;
+	}
+	```
+
+	
+
+	**main.c**
+
+	```c
+	#include <stdio.h>
+	#include "max.h"
+	
+	int main(void)
+	{
+	    int a = 5;
+	    int b = 6;
+	    printf("%f\n", max(a, gAll));
+	    return 0;
+	}
+	```
+
++ **几个容易混的点**
+
+	* `int gAll = 12;` 是定义，只能出现一次。
+	* `extern int gAll;` 是声明，可以出现在多个文件里。
+	* 头文件里放 `extern`，`.c` 文件里放定义。
+	* 函数声明放头文件，函数体放 `.c` 文件。
+	* 头文件要加 `#ifndef` 卫士，防止重复包含
+
++ `gAll` 是 `int`，`max` 的参数是 `double`，它们互相独立。
+
+	调用 `max(a, gAll)` 时：
+
+	* `a` 是 `int`，自动转成 `double`
+	* `gAll` 是 `int`，自动转成 `double`
+
+	所以 `max` 返回 `double`，`printf` 用 `%f`。
+
++ 在头文件里写 `int gAll = 12;` → 多个文件包含后重复定义。
+
+	+ 只编译 `main.c`，不编译 `max.c` → 链接时报 `undefined reference to 'max'` 和 `undefined reference to 'gAll'`。
+
+	+ 忘记在头文件里写 `extern` → 其他文件不知道 `gAll` 存在。
+	+ 头文件没加卫士 → 重复包含导致重复定义。
+
++ ![](../Saved Pictures/29.jpg)
+
+
+
+### 十、文件操作与位运算
+
+#### 1.格式化输入输出（13.1.1）
+
++ **flag**
+
+  + `-`表示左对齐
+
+    ```c
+    #include <stdio.h>
+    int main()
+    {
+    	printf("%9d\n",123);
+    	printf("%-9d\n",123);
+    	return 0;
+    }
+    //      123
+    //123
+    ```
+
+  + `+`强制显示正负号，通常情况下正数不会显示+，只有负数会显示–。加上这个标志后，正数也会带上+。
+
+  	```c
+  	#include <stdio.h>
+  	int main()
+  	{
+  		printf("%9d\n",123);
+  		printf("%-+9d\n",-123);
+  		printf("%-+9d\n",123);
+  		printf("%+-9d\n",123);
+  		return 0;
+  	}
+  	//      123
+  	//-123
+  	//+123
+  	//+123
+  	```
+
+  + `0`表示0填充
+
+  	```c
+  	#include <stdio.h>
+  	int main()
+  	{
+  		printf("%09d",123);
+  		return 0;
+  	}
+  	//000000123
+  	```
+
++ **[width]\[.prec]**
+
+	+ ![](../Saved Pictures/30.jpg)
+
+	+ ```c
+		#include <stdio.h> 
+		int main()
+		{
+			printf("%0*d\n",6,123);
+			printf("%*.*f\n",7,2,123.123);
+			return 0; 
+		}
+		//000123
+		// 123.12
+		```
+
++ **[hlL]**
+
+	![](../Saved Pictures/32.jpg)
+
++ **type**
+
+	![](../Saved Pictures/31.jpg)
+
+	+ %n
+
+		```c
+		#include <stdio.h>
+		int main()
+		{
+		    int number = 0;
+		    printf("%d%n\n", 12345, &number);
+		    printf("%d\n", number);
+		    return 0;
+		}
+		```
+
++ **scanf([flag])**
+
+	![](../Saved Pictures/34.jpg)
+
+	+ `*`
+
+		```c
+		#include <stdio.h>
+		int main()
+		{
+			int n;
+			scanf("%*d%d",&n);
+			printf("%d\n",n);
+			return 0;
+		}
+		//123 345
+		//345
+		
+		```
+
++ **scanf(type)**
+
+	![](../Saved Pictures/35.jpg)
+
+	+ […]
+
+		![](../Saved Pictures/36.jpg)
+
++ **printf和scanf的返回值**
+
+	+ printf：输出的字符数
+
+	+ scanf:读入的项目数
+
+	+ ```c
+		#include <stdio.h>
+		int main()
+		{
+			int num;
+			int i1=scanf("%i",&num);
+			int i2=printf("%d\n",num);
+			printf("%d:%d",i1,i2);
+			return 0;
+		}
+		//1234
+		//1234
+		//1:5
+		```
+
+#### 2.文件输入输出（13.1.2）
+
++ **用>和<做重定向**
+
+	+ **fopen**
+
+		```c
+		FILE *fp = fopen("data.txt", "r"); // "r" 表示以“只读”模式打开抽屉
+		打开后一定要检查 fp 是否成功，如果文件不存在或权限不够，fopen 会返回 NULL
+		```
+
+		![](../Saved Pictures/69AA5E40A83C693B29786B28456ABD0E.jpg)
+
+	+ **fscanf和fprintf**
+
+		+ 这里就是把熟悉的 `printf` 和 `scanf` 前面加了个字母 **`f`**（file），它们的作用完全一样，只是**操作对象从屏幕/键盘变成了你手里的“抽屉把手” `fp`**。
+
+		+ **写文件 `fprintf`**：把数据“打印”到文件里。
+
+			```c
+			fprintf(fp, "%d %s", 100, "hello"); // 和printf用法一样，只是多了第一个参数fp
+			```
+
+		+ **读文件 `fscanf`**：从文件里“扫描”数据到变量中。
+
+			```c
+			int num; 
+			fscanf(fp, "%d", &num); // 和scanf用法一样，只是多了第一个参数fp
+			```
+
+		+ **关键点**：`fscanf` 的返回值是**成功读取到的数据项个数**。如果返回 `EOF`（通常是 -1），就说明文件读完了或者出错了
+
+	+ **fclose**
+
+		+ 东西存取完毕，必须把抽屉关上，并**把“把手”还回去**。`fclose(fp)` 就是这个动作。如果不关闭文件，写入的数据可能还留在缓冲区，没有真正保存到硬盘上，甚至可能丢失。
+
++ `FILE` 是一个**结构体**，它内部记录了文件的各种状态信息（比如当前读到哪个位置了、是读还是写模式等）。你不需要知道它内部长什么样，**只要把它当成一个“文件句柄”或“遥控器”来用就行**。`fopen` 给你遥控器，`fprintf`/`fscanf` 用遥控器操作文件，`fclose` 收回遥控器。
+
++ **用代码把数据写进文件**
+
+	```c
+	#include <stdio.h>
+	
+	int main() {
+	    // 用 "w" (写模式) 打开文件，如果文件不存在会创建，存在会清空
+	    FILE *fp = fopen("data.txt", "w");
+	    
+	    if (fp) {
+	        int num = 8888;
+	        // 用 fprintf 把数字写进文件
+	        fprintf(fp, "%d", num); 
+	        printf("写入成功！你去文件夹里看看 data.txt，里面是不是有 8888？\n");
+	        fclose(fp);
+	    } else {
+	        printf("打开失败\n");
+	    }
+	    return 0;
+	}
+	```
+
++ **用代码从文件里读数据**
+
+	```c
+	#include <stdio.h>
+	
+	int main() {
+	    // 这次用 "r" (只读模式) 打开刚才建好的文件
+	    FILE *fp = fopen("data.txt", "r");
+	    
+	    if (fp) {
+	        int num;
+	        // 用 fscanf 把文件里的数字吸出来，装进 num 里
+	        fscanf(fp, "%d", &num); 
+	        printf("读取成功！文件里的数字是: %d\n", num);
+	        fclose(fp);
+	    } else {
+	        printf("打不开文件，你是不是没做第一步？\n");
+	    }
+	    return 0;
+	}
+	```
+
+	1. **写文件**：`fopen` 用 `"w"` ➡️ `fprintf` ➡️ `fclose`。
+	2. **读文件**：`fopen` 用 `"r"` ➡️ `fscanf` ➡️ `fclose`。
+	3. **“写”就像用钢笔往本子上画，需要提供笔（`fp`）和内容（变量）。**
+	4. **“读”就像用吸管从本子里吸，需要提供吸管（`fp`）和装的地方（`&变量`）。**
+
+#### 3.二进制文件（13.1.3）
+
+![](../Saved Pictures/37.jpg)
+
+1. 所有的文件本质都是 0 和 1。
+2. **文本文件**：人可以直接看（用 `cat`, `more` 看，用 `vi` 改），读写时需要“翻译”（格式化）。
+3. **二进制文件**：人直接看看不懂（全是乱码），必须要用专门的程序（比如你的 C 语言代码，或者播放器）去直接拷贝 0 和 1。
+
+![](../Saved Pictures/38.jpg)
+
+
+
+![](../Saved Pictures/39.jpg)
+
++ 二进制的读写
+
+	![](../Saved Pictures/40.jpg)
+
+	+ **`ptr` (包裹在哪？)**
+
+		* 写文件时（`fwrite`）：这是你要**寄出去的包裹地址**。比如 `&num` 或 `&stu`。
+		* 读文件时（`fread`）：这是你要**接收包裹的仓库地址**。你要把读到的数据存在哪个变量里？
+			*(注：前面的 `void \*` 意思是它可以接收任何类型的地址；`const` 意思是在写文件时，这个包裹不能被拆开修改。)*
+
+	+ **`size` (每块砖多大？)**
+
+		* 你每一次要搬运的**一块数据有多大**。通常用 `sizeof(类型)` 来算。比如 `sizeof(int)` 就是 4 个字节。
+
+	+ **`nitems` (要搬几块？)**
+
+		* 你要读写**几个**这样的东西。通常写 `1`。如果你有个数组，想一次性把 10 个数字都存进去，这里就写 `10`。
+
+	+ **`stream` (搬去哪辆车上？)**
+
+		* 就是你用 `fopen` 打开的**文件指针**（`FILE *`），也就是 `fp`。
+
+	+ 注意：
+
+		之前学的 `fscanf` 和 `fprintf`，`fp` 是放在**最前面**的（`fscanf(fp, "%d", &num)`）。
+		但 `fread` 和 `fwrite`，`fp` 放在了**最后面**。
+
+	+ 用法：
+
+		```c
+		#include <stdio.h>
+		int main()
+		{
+		   	//千万不能用.c文件，可以自己建一个
+		    FILE *fp = fopen("mydata.bin", "w+"); 
+		    
+		    if(fp){
+		        int a = 123;
+		        int b = 0;
+		        
+		        // 把数字写进 mydata.bin 里
+		        fwrite(&a, sizeof(int), 1, fp);
+		        
+		        // 把光标拨回开头
+		        rewind(fp); 
+		        
+		        // 从 mydata.bin 里读出来
+		        fread(&b, sizeof(int), 1, fp);
+		        
+		        printf("写进去: %d, 读出来: %d\n", a, b);
+		        
+		        fclose(fp);
+		    }
+		    else{
+		        printf("文件打开失败");
+		    }
+		    return 0;
+		}
+		```
+
+		
